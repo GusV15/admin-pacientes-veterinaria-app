@@ -14,27 +14,21 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
 
-          <!-- Ruta al componente Main -->
+          <!-- Ruta al componente Add Appointment -->
           <li class="nav-item">
-            <router-link to="/">
-              <a class="nav-link" href="#">Inicio</a>
-            </router-link>
-          </li> 
-
-          <!-- Ruta al componente AddAppointment -->
-         <!--  <li class="nav-item">
             <router-link to="/addappointment">
               <a class="nav-link" href="#">Add Appointment</a>
             </router-link>
-          </li> -->
+          </li> 
 
-          <!-- Ruta al componente HistoryAppoiment -->
-          <!-- <li class="nav-item">
+            <!-- Ruta al componente Add HistoryAppoiment -->
+          <li class="nav-item">
             <router-link to="/historyappoiment">
               <a class="nav-link" href="#">History Appoiment</a>
             </router-link>
-          </li> -->
-          
+          </li> 
+
+         
         </ul>
       </div>
     </nav>
