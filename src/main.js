@@ -7,7 +7,7 @@ import 'popper.js'
 import 'bootstrap'
 
 
-//import './form'
+import './form'
 import { router } from './router'
 import './axios'
 //import './globalFilters'

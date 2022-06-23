@@ -1,9 +1,6 @@
 <template>
-<div class="container-fluid mt-3">
-    <div class="jumbotron">
-      <h1>Header de Mario</h1>
-      <br>
-
+  <div class="container-fluid mt-3">
+    <Header/>
     <Navbar />
       <router-view></router-view>
 
@@ -19,17 +16,17 @@
         <div class="col-4"><Estructura /></div>
         <div class="col-4"><Atributos /></div>
       </div> -->
-
-    </div> 
-  </div>
+    </div>
 </template>
 
 <script>
+import Header from './components/Header.vue';
 import Navbar from './components/Navbar.vue'
 export default {
   name: "App",
   components: {
     Navbar,
+    Header,
   }
 }
 </script>
