@@ -5,32 +5,28 @@
     <h2>History Appointment</h2>
       <hr>
       <br>
-    <h4 v-if="!citas.length" class="alert alert-warning">          
-          no dating record
-      </h4>
-       <validate v-else tag="div">
-          <!-- Elemento de entrada -->
-          <label for="nombre">Search history by name</label>
-          <input 
-            type="text"
-            id="nombre"
-            name="nombre" 
-            class="form-control"
-            autocomplete="off"
-            :minlength="nombreMinLength"
-            requerid  
-          />
-           <!-- Mensajes de validación -->
-          <field-messages name="nombre" show="$dirty">
-            <!-- <div class="alert alert-success mt-1">Success!</div> -->
-            
-            <div slot="minlength" class="alert alert-danger mt-1">
-              Este campo requiere como mínimo {{nombreMinLength}} caracteres.
-            </div>
-          </field-messages>
-       </validate>
+   
+   <form  novalidate @submit.prevent="enviar()">
+
+      <!-- Campo nombre -->
+      <div class="form-group">
+        <label for="nombre">Nombre</label>
+        <input 
+          id="nombre" 
+          class="form-control" 
+          type="text"
+          v-model.trim="formData.nombre"
+          @input="formDirty.nombre=true"
+        >
+       
+        <div v-if="(!formData.nombre || formData.nombre.length<3) && formDirty.nombre" class="alert alert-danger mt-1">
+          <div v-if="!formData.nombre">Campo requerido</div>
+          <div v-else-if="formData.nombre.length<3">Este campo requiere al menos 3 caracteres</div>
+        </div>
+      </div>
+      </form>
         <br>
-      <div  class="media alert alert-info" v-for="(cita,index) in mostrarAtendidos()  "   :key="index" >    
+      <div  class="media alert alert-info" v-for="(cita,index) in mostrarAtendidos(formData.nombre)  "   :key="index" >    
 <!--           <img v-if="cita.atendido"  :src="cita.foto" width="200" :alt="cita.nombre" :style="{'border-radius': '10px'}">  -->   
          <div  class="media-body ml-4">
               <h5 class="mt-0">
@@ -68,11 +64,14 @@ url:'https://62861febf0e8f0bb7c10b9cd.mockapi.io/citas',
 citas:[],
 totalAtendidos:0,
 totalPorNombre:0,
-nombreMinLength:2
+nombreMinLength:2,
+nombre:null,
+formData : this.getInicialData(),
+formDirty : this.getInicialData()
       }
     },
     methods: {
-convertirFyh(fyh) {
+      convertirFyh(fyh) {
         return new Date(fyh).toLocaleString()
       },
       /* ---------------------------------- */
@@ -88,19 +87,36 @@ convertirFyh(fyh) {
           console.error('Error en getcitas()', error.message)
         }
       },
-    mostrarAtendidos(){
-     let atendidos=this.citas.filter(cita => cita.atendido)
-     return atendidos
+
+    mostrarAtendidos(nom){
+      console.log(nom);
+      console.log(this.calcularHistorialPorNombre.nombre)
+     return nom==null || nom==""?this.citas.filter(cita => cita.atendido):this.citas.filter(cita => cita.atendido && cita.nombre==nom)
+    },
+
+     getInicialData() {
+      return {
+        nombre: null,
+      }
+    },
+
+     enviar() {
+      console.log({...this.formData})
+      this.formData = this.getInicialData()
+      this.formDirty = this.getInicialData()
     }
+
     },
     computed: {
 calcularHistorialPorNombre() {
   let totalAtendidos= this.citas.filter(cita => cita.atendido).length
   let totalPorNombre= this.citas.filter(cita => cita.nombre).length
+  let nombre=this.formData.nombre
 return{
   ninguno : totalAtendidos == 0,
 totalAtendidos:totalAtendidos,
-totalPorNombre:totalPorNombre
+totalPorNombre:totalPorNombre,
+nombre:nombre
 }
 }
     }
