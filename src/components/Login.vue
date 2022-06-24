@@ -2,10 +2,9 @@
 
   <section class="src-components-login">
     <div class="jumbotron">
-      <h2>Login</h2>
+      <h2>Log in</h2>
       <hr>
-      <hr>
-      <br>
+     
       
       <vue-form :state="formState" @submit.prevent="login()">
        
@@ -71,18 +70,8 @@
         <br>
 
         <!-- Botón de Login -->
-        <!-- <button class="btn btn-outline-primary my-4 " style="width: 100%" :disabled="formState.$invalid" @click="login()">Login</button> -->
-        <button class="btn btn-success my-4" :disabled="formState.$invalid" @click="login()">Enviar</button>
-
-        <hr>
-        <p><u>formData</u></p>
-        <pre>{{formData }}</pre>
-        <pre>{{usuarioRegistado}}</pre>
-        <pre>{{usuarioLogin}}</pre>
-        <pre>{{isLogin}}</pre>
-        <br>
-        <p><u>formState</u></p>
-        <pre>{{formState}}</pre>
+        <button class="btn btn-outline-primary my-4 " style="width: 100%" :disabled="formState.$invalid" @click="login()">Log in</button>
+        
 
       </vue-form>
     </div>
@@ -143,6 +132,13 @@
 
 <style scoped lang="css">
   .src-components-login {
-
+    width: 30%;
+    margin-top: 40px;
+    margin-left: auto;
+    margin-right: auto;
+    
+  }
+  .jumbotron{
+    
   }
 </style>

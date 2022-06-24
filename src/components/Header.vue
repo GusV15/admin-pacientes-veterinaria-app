@@ -18,7 +18,7 @@
             alt="Usuario logo" 
             src="https://c0.klipartz.com/pngpicture/81/570/gratis-png-perfil-logo-iconos-de-computadora-usuario-usuario.png"
             width="50"
-          >Login</a>
+          >Log in</a>
       </router-link>
       
     </div>
