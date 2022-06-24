@@ -4,36 +4,51 @@
      <div class="jumbotron">
     <h2>History Appointment</h2>
       <hr>
-      <hr>
       <br>
-
-
-<button class="btn btn-success mr-2 mb-3" @click="getMascotas()">GET</button>
-      <button class="btn btn-info mb-3" @click="postMascotas()">POST</button>
-
-      <div class="media alert alert-info" v-for="(mascota,index) in mascotas" :key="index">
-          <img :src="mascota.foto" width="400" :alt="mascota.nombre" :style="{'border-radius': '10px'}">
-          <div class="media-body ml-4">
-              <h4 class="mt-0">
-                <u>Historial de Mascota {{ index + 1 }} - ID: {{ mascota.id }} - creado: {{ convertirFyh(mascota.fechaDeAtencion) }}</u>
-              </h4>
-              <br>
-              <p>Nombre: <b>{{ mascota.nombre }}</b></p>
-              <p>Edad: <b>{{ mascota.edad }}</b></p>
-              <p>Especie: <b>{{ mascota.especie }}</b></p>
-              <p>Raza: <b>{{ mascota.raza }}</b></p>
-              <p>Sexo: <b>{{ mascota.sexo }}</b></p>
-              <p>Observación: <i>{{ mascota.observacion}}</i></p>
-              <p>Fecha de Atencion: <b>{{ mascota.fechaDeAtencion }}</b></p>
-              
-              <p>Nombre de Humano: {{ mascota.nombreDuenio }}</p>
-              <p>Dirección De Humano: <i><u>{{ mascota.direccion }}</u></i> </p>
-
-              <button class="btn btn-warning mr-3 mt-3" @click="putMascota(mascota.id)">PUT</button>
-              <button class="btn btn-danger mt-3" @click="deleteMascota(mascota.id)">DELETE</button>
+    <h4 v-if="!citas.length" class="alert alert-warning">          
+          no dating record
+      </h4>
+       <validate v-else tag="div">
+          <!-- Elemento de entrada -->
+          <label for="nombre">Search history by name</label>
+          <input 
+            type="text"
+            id="nombre"
+            name="nombre" 
+            class="form-control"
+            autocomplete="off"
+            :minlength="nombreMinLength"
+            requerid  
+          />
+           <!-- Mensajes de validación -->
+          <field-messages name="nombre" show="$dirty">
+            <!-- <div class="alert alert-success mt-1">Success!</div> -->
+            
+            <div slot="minlength" class="alert alert-danger mt-1">
+              Este campo requiere como mínimo {{nombreMinLength}} caracteres.
+            </div>
+          </field-messages>
+       </validate>
+        <br>
+      <div  class="media alert alert-info" v-for="(cita,index) in mostrarAtendidos()  "   :key="index" >    
+<!--           <img v-if="cita.atendido"  :src="cita.foto" width="200" :alt="cita.nombre" :style="{'border-radius': '10px'}">  -->   
+         <div  class="media-body ml-4">
+              <h5 class="mt-0">
+                <u>dating history {{ index + 1 }}  - create: {{ convertirFyh(cita.fecha_hora_atencion) }}</u>
+              </h5>
+              <p>Pet: <b>{{ cita.nombre }}</b></p>
+              <p >Human Name: <b>{{ cita.nombre_duenio }}</b></p>
+              <p>Date and time of attention: <b>{{ cita.fecha_hora_atencion }}</b></p>
+              <p>Email: <b>{{ cita.email }}</b></p>
+              <p>Observation: <b>{{ cita.sintomas }}</b></p>
+             <!--  <p>atendido: <b>{{ cita.atendido }}</b></p> -->
+              <!-- <button class="btn btn-danger mt-3" @click="deleteHistorial(cita.id)">DELETE</button> -->
           </div>
-      </div>
-
+          </div>
+         <h6 class="alert alert-secondary">
+         <span v-if="calcularHistorialPorNombre.ninguno">History is empty</span>
+          <span v-else> Number of records: {{calcularHistorialPorNombre.totalAtendidos}} </span>
+      </h6>
       </div>
   </section>
 
@@ -45,12 +60,15 @@
     name: 'src-components-history-appoiment',
     props: [],
     mounted () {
-this.getMascotas()
+this.getCitas()
     },
     data () {
       return {
-url:'https://628b0d3f667aea3a3e2655ba.mockapi.io/HistoryAppoiment',
-mascotas:[]
+url:'https://62861febf0e8f0bb7c10b9cd.mockapi.io/citas',
+citas:[],
+totalAtendidos:0,
+totalPorNombre:0,
+nombreMinLength:2
       }
     },
     methods: {
@@ -60,19 +78,31 @@ convertirFyh(fyh) {
       /* ---------------------------------- */
       /*           API REST : GET           */
       /* ---------------------------------- */
-      async getMascotas() {
+      async getCitas() {
         try {
-          let { data: mascotas } = await this.axios(this.url)
-          console.log('AXIOS GET mascotas', mascotas)
-          this.mascotas = mascotas
+          let { data: citas } = await this.axios(this.url)
+          console.log('AXIOS GET citas', citas)
+          this.citas = citas
         }
         catch(error) {
-          console.error('Error en getMascotas()', error.message)
+          console.error('Error en getcitas()', error.message)
         }
       },
+    mostrarAtendidos(){
+     let atendidos=this.citas.filter(cita => cita.atendido)
+     return atendidos
+    }
     },
     computed: {
-
+calcularHistorialPorNombre() {
+  let totalAtendidos= this.citas.filter(cita => cita.atendido).length
+  let totalPorNombre= this.citas.filter(cita => cita.nombre).length
+return{
+  ninguno : totalAtendidos == 0,
+totalAtendidos:totalAtendidos,
+totalPorNombre:totalPorNombre
+}
+}
     }
 }
 
@@ -84,21 +114,17 @@ convertirFyh(fyh) {
 
   }
     .jumbotron {
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#b4ddb4+0,83c783+17,52b152+33,008a00+67,005700+83,002400+100;Green+3D+%231 */
-    background: #b4ddb4; /* Old browsers */
-    background: -moz-linear-gradient(left,  #b4ddb4 0%, #83c783 17%, #52b152 33%, #008a00 67%, #005700 83%, #002400 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(left,  #b4ddb4 0%,#83c783 17%,#52b152 33%,#008a00 67%,#005700 83%,#002400 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to right,  #b4ddb4 0%,#83c783 17%,#52b152 33%,#008a00 67%,#005700 83%,#002400 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b4ddb4', endColorstr='#002400',GradientType=1 ); /* IE6-9 */
-
-    color: #222;
+ background-color: white;
   }
 
   hr {
-    background-color: #ddd;
+    background-color: darkgray;
   }
 
   pre {
     color: #333;
   }
+ p { margin: 0;
+  }
+  h5 { margin: 0; }
 </style>
