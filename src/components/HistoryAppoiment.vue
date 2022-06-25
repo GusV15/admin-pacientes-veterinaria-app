@@ -10,11 +10,12 @@
 
       <!-- Campo nombre -->
       <div class="form-group">
-        <label for="nombre">Nombre</label>
+        <label for="nombre">Name</label>
         <input 
           id="nombre" 
           class="form-control" 
-          type="text"
+          type="search"
+          placeholder="Search by name"
           v-model.trim="formData.nombre"
           @input="formDirty.nombre=true"
         >
@@ -27,7 +28,7 @@
       </form>
         <br>
       <div  class="media alert alert-info" v-for="(cita,index) in mostrarAtendidos(formData.nombre)  "   :key="index" >    
-<!--           <img v-if="cita.atendido"  :src="cita.foto" width="200" :alt="cita.nombre" :style="{'border-radius': '10px'}">  -->   
+  <img v-if="cita.atendido"  :src="cita.foto" width="150" :alt="cita.nombre" :style="{'border-radius': '10px'}"> 
          <div  class="media-body ml-4">
               <h5 class="mt-0">
                 <u>dating history {{ index + 1 }}  - create: {{ convertirFyh(cita.fecha_hora_atencion) }}</u>
@@ -42,8 +43,16 @@
           </div>
           </div>
          <h6 class="alert alert-secondary">
-         <span v-if="calcularHistorialPorNombre.ninguno">History is empty</span>
-          <span v-else> Number of records: {{calcularHistorialPorNombre.totalAtendidos}} </span>
+         <div v-if="!calcularHistorialPorNombre.existeEnGeneral " > No hay Registro</div>
+         <span v-if="this.formData.nombre ==null || this.formData.nombre ==''">Total de registros: {{ calcularHistorialPorNombre.totalEnGeneral }}</span>
+        <!--   <span v-else-if="this.formData.nombre !=null">All records {{ calcularHistorialPorNombre.cantidadPorNombre }} </span> -->
+                  <span v-else-if="this.formData.nombre !=null">
+                      Se encontro {{ calcularHistorialPorNombre.cantidadPorNombre }} de {{ calcularHistorialPorNombre.totalEnGeneral }} registros
+                   <!--   {{calcularHistorialPorNombre.todos}}
+                     {{this.formData.nombre!=''}} -->
+                  </span>
+                  
+                 
       </h6>
       </div>
   </section>
@@ -62,15 +71,12 @@ this.getCitas()
       return {
 url:'https://62861febf0e8f0bb7c10b9cd.mockapi.io/citas',
 citas:[],
-totalAtendidos:0,
-totalPorNombre:0,
 nombreMinLength:2,
-nombre:null,
 formData : this.getInicialData(),
 formDirty : this.getInicialData()
       }
     },
-    methods: {
+methods: {
       convertirFyh(fyh) {
         return new Date(fyh).toLocaleString()
       },
@@ -84,19 +90,19 @@ formDirty : this.getInicialData()
           this.citas = citas
         }
         catch(error) {
-          console.error('Error en getcitas()', error.message)
+          console.error('Error en getCitas()', error.message)
         }
       },
 
     mostrarAtendidos(nom){
-      console.log(nom);
-      console.log(this.calcularHistorialPorNombre.nombre)
-     return nom==null || nom==""?this.citas.filter(cita => cita.atendido):this.citas.filter(cita => cita.atendido && cita.nombre==nom)
+     return nom==null || nom==""?
+     this.citas.filter(cita => cita.atendido)
+     :this.citas.filter(cita => cita.atendido && cita.nombre== nom)
     },
 
      getInicialData() {
       return {
-        nombre: null,
+      nombre: null,
       }
     },
 
@@ -107,16 +113,22 @@ formDirty : this.getInicialData()
     }
 
     },
-    computed: {
-calcularHistorialPorNombre() {
-  let totalAtendidos= this.citas.filter(cita => cita.atendido).length
-  let totalPorNombre= this.citas.filter(cita => cita.nombre).length
-  let nombre=this.formData.nombre
-return{
-  ninguno : totalAtendidos == 0,
-totalAtendidos:totalAtendidos,
-totalPorNombre:totalPorNombre,
-nombre:nombre
+computed: {
+    calcularHistorialPorNombre() {
+  let cant = this.citas.filter(cita => cita.atendido && cita.nombre==this.formData.nombre).length
+          let total = this.citas.filter(cita => cita.atendido).length
+      return{
+      /*   ninguno : totalAtendidos == 0,
+        totalAtendidos:totalAtendidos,
+        totalPorNombre:totalPorNombre,
+        nombre:nombre */
+
+              ningunoPorNombre : cant == 0,
+              existeEnGeneral: total > 0,
+              existePorNombre: cant > 0,
+              cantidadPorNombre : cant,
+              totalEnGeneral : total,
+              todos : cant == total
 }
 }
     }
@@ -138,9 +150,10 @@ nombre:nombre
   }
 
   pre {
-    color: #333;
+    color: black;
   }
  p { margin: 0;
+  color:black
   }
   h5 { margin: 0; }
 </style>
