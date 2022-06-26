@@ -1,104 +1,183 @@
 <template >
+  <section>
+    <div class="jumbotron">
+      <h2>{{ "History Appointment" | pasarAMayuscula }}</h2>
+      <hr />
 
-  <section class="src-components-history-appoiment">
-     <div class="jumbotron">
-    <h2>History Appointment</h2>
-      <hr>
-      <hr>
-      <br>
-
-
-<button class="btn btn-success mr-2 mb-3" @click="getMascotas()">GET</button>
-      <button class="btn btn-info mb-3" @click="postMascotas()">POST</button>
-
-      <div class="media alert alert-info" v-for="(mascota,index) in mascotas" :key="index">
-          <img :src="mascota.foto" width="400" :alt="mascota.nombre" :style="{'border-radius': '10px'}">
-          <div class="media-body ml-4">
-              <h4 class="mt-0">
-                <u>Historial de Mascota {{ index + 1 }} - ID: {{ mascota.id }} - creado: {{ convertirFyh(mascota.fechaDeAtencion) }}</u>
-              </h4>
-              <br>
-              <p>Nombre: <b>{{ mascota.nombre }}</b></p>
-              <p>Edad: <b>{{ mascota.edad }}</b></p>
-              <p>Especie: <b>{{ mascota.especie }}</b></p>
-              <p>Raza: <b>{{ mascota.raza }}</b></p>
-              <p>Sexo: <b>{{ mascota.sexo }}</b></p>
-              <p>Observación: <i>{{ mascota.observacion}}</i></p>
-              <p>Fecha de Atencion: <b>{{ mascota.fechaDeAtencion }}</b></p>
-              
-              <p>Nombre de Humano: {{ mascota.nombreDuenio }}</p>
-              <p>Dirección De Humano: <i><u>{{ mascota.direccion }}</u></i> </p>
-
-              <button class="btn btn-warning mr-3 mt-3" @click="putMascota(mascota.id)">PUT</button>
-              <button class="btn btn-danger mt-3" @click="deleteMascota(mascota.id)">DELETE</button>
-          </div>
+      <form novalidate @submit.prevent="enviar()">
+        <!-- Campo nombre -->
+        <div class="form-group">
+          <label for="nombre">Name</label>
+          <input
+            id="nombre"
+            class="form-control"
+            type="search"
+            placeholder="Search by name"
+            v-model.trim="formData.nombre"
+            @input="formDirty.nombre = true"
+          />
+        </div>
+      </form>
+      <br />
+      <div
+        class="media alert alert-info"
+        v-for="(cita, index) in mostrarAtendidos(formData.nombre)"
+        :key="index"
+      >
+        <!--  <img v-if="cita.atendido"  :src="cita.foto" width="150" :alt="cita.nombre" :style="{'border-radius': '10px'}">  -->
+        <div class="media-body ml-4">
+          <h6 class="mt-0">
+            <b>
+              {{ "dating history" | pasarAMayuscula }} {{ index + 1 }} -
+              {{ "create" | pasarAMayuscula }}
+              {{ convertirFyh(cita.fecha_hora_atencion) }}</b
+            >
+          </h6>
+          <p>
+            Pet: <b>{{ cita.nombre }}</b>
+          </p>
+          <p>
+            Human Name: <b>{{ cita.nombre_duenio }}</b>
+          </p>
+          <p>
+            Date and time of attention: <b>{{ cita.fecha_hora_atencion }}</b>
+          </p>
+          <p>
+            Email: <b>{{ cita.email }}</b>
+          </p>
+          <p>
+            Observation: <b>{{ cita.sintomas }}</b>
+          </p>
+          <!--  <p>atendido: <b>{{ cita.atendido }}</b></p> -->
+          <!-- <button class="btn btn-danger mt-3" @click="deleteHistorial(cita.id)">DELETE</button> -->
+        </div>
       </div>
 
-      </div>
+      <span
+        class="alert alert-danger"
+        v-if="!calcularHistorialPorNombre.existeEnGeneral"
+      >
+        No hay Registro</span
+      >
+      <span
+        :class="getClass(!estado)"
+        v-else-if="this.formData.nombre == null || this.formData.nombre == ''"
+        >Total de registros:
+        {{ calcularHistorialPorNombre.totalEnGeneral }}</span
+      >
+      <span :class="getClass(estado)" v-else-if="this.formData.nombre != null">
+        Se encontro {{ calcularHistorialPorNombre.cantidadPorNombre }} de
+        {{ calcularHistorialPorNombre.totalEnGeneral }} registros
+      </span>
+    </div>
   </section>
-
 </template>
 
 <script lang="js">
 
-  export default  {
-    name: 'src-components-history-appoiment',
-    props: [],
-    mounted () {
-this.getMascotas()
-    },
-    data () {
-      return {
-url:'https://628b0d3f667aea3a3e2655ba.mockapi.io/HistoryAppoiment',
-mascotas:[]
-      }
-    },
-    methods: {
-convertirFyh(fyh) {
-        return new Date(fyh).toLocaleString()
-      },
-      /* ---------------------------------- */
-      /*           API REST : GET           */
-      /* ---------------------------------- */
-      async getMascotas() {
-        try {
-          let { data: mascotas } = await this.axios(this.url)
-          console.log('AXIOS GET mascotas', mascotas)
-          this.mascotas = mascotas
-        }
-        catch(error) {
-          console.error('Error en getMascotas()', error.message)
-        }
-      },
-    },
-    computed: {
+export default  {
+  name: 'src-components-history-appoiment',
+  props: [],
+  
+  mounted () {
+  this.getCitas()
+  },
 
+  data () {
+    return {
+      url:"https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/citas/",
+      citas:[],
+      nombreMinLength:2,
+      estado:false,
+      formData : this.getInicialData(),
+      formDirty : this.getInicialData(),
+      cantHistorial :0,
     }
+  },
+  methods: {
+  convertirFyh(fyh) {
+    return new Date(fyh).toLocaleString()
+  },
+  
+  async getCitas() {
+    try {
+      let { data: citas } = await this.axios(this.url)
+      console.log('AXIOS GET citas', citas)
+      this.citas = citas
+      this.cantHistorial=citas.length
+      this.$emit('cantHistorial',this.cantHistorial);
+    }
+    catch(error) {
+      console.error('Error en getCitas()', error.message);
+    }
+  },
+
+  mostrarAtendidos(nom){
+    return !nom ?
+    this.citas.filter(cita => cita.atendido)
+    :this.citas.filter(cita => cita.atendido && cita.nombre.toUpperCase().includes(nom.toUpperCase()));
+  },
+
+  obtenerCantidadAtendidos(){
+    return this.calcularHistorialPorNombre.totalEnGeneral;
+  },
+  
+  getInicialData() {
+    return {
+      nombre: null,
+    }
+  },
+  enviar() {
+    this.formData = this.getInicialData(),
+    this.formDirty = this.getInicialData();
+  },
+  pasarAMayuscula(nom){
+    if(nom){
+      return nom.toUpperCase();
+    }
+  },
+
+  getClass(estado) {
+    return [{ 'alert alert-secondary':estado,'alert alert-success':!estado }, 'text-black', 'p-2', 'rounded'];          
+  }
+
+},
+computed: {
+  calcularHistorialPorNombre() {
+    let cant = this.citas.filter(cita => cita.atendido && (cita.nombre.toUpperCase().includes(this.pasarAMayuscula(this.formData.nombre)))).length;
+    let total = this.citas.filter(cita => cita.atendido).length;
+    return {
+            ningunoPorNombre : cant == 0,
+            existeEnGeneral: total > 0,
+            existePorNombre: cant > 0,
+            cantidadPorNombre : cant,
+            totalEnGeneral : total,
+            todos : cant == total,
+    }
+  }
+}
 }
 
 
 </script>
 
 <style scoped lang="css">
-  .src-components-history-appoiment {
+.jumbotron {
+  background-color: white;
+}
 
-  }
-    .jumbotron {
-    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#b4ddb4+0,83c783+17,52b152+33,008a00+67,005700+83,002400+100;Green+3D+%231 */
-    background: #b4ddb4; /* Old browsers */
-    background: -moz-linear-gradient(left,  #b4ddb4 0%, #83c783 17%, #52b152 33%, #008a00 67%, #005700 83%, #002400 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(left,  #b4ddb4 0%,#83c783 17%,#52b152 33%,#008a00 67%,#005700 83%,#002400 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to right,  #b4ddb4 0%,#83c783 17%,#52b152 33%,#008a00 67%,#005700 83%,#002400 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b4ddb4', endColorstr='#002400',GradientType=1 ); /* IE6-9 */
+hr {
+  background-color: darkgray;
+}
 
-    color: #222;
-  }
-
-  hr {
-    background-color: #ddd;
-  }
-
-  pre {
-    color: #333;
-  }
+pre {
+  color: black;
+}
+p {
+  margin: 0;
+  color: black;
+}
+h5 {
+  margin: 0;
+}
 </style>
