@@ -10,7 +10,7 @@ import 'bootstrap'
 import './form'
 import { router } from './router'
 import './axios'
-//import './globalFilters'
+import './globalFilters'
 //import './globalMixins'
 //import store from './store'
 
