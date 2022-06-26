@@ -39,7 +39,7 @@
               <p>Date and time of attention: <b>{{ cita.fecha_hora_atencion }}</b></p>
               <p>Email: <b>{{ cita.email }}</b></p>
               <p>Observation: <b>{{ cita.sintomas }}</b></p>
-             <!--  <p>atendido: <b>{{ cita.atendido }}</b></p> -->
+              <p>atendido: <b>{{ cita.atendido }}</b></p>
               <!-- <button class="btn btn-danger mt-3" @click="deleteHistorial(cita.id)">DELETE</button> -->
           </div>
           </div>
