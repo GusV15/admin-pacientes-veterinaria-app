@@ -5,6 +5,7 @@ import AddAppointment from "./components/AddAppointment.vue";
 import Appointments from "./components/Appointments.vue";
 import HistoryAppoiment from "./components/HistoryAppoiment.vue";
 import Patients from "./components/Patients.vue";
+import AddPacients from "./components/AddPacients/IndexAddPacients.vue";
 import Login from "./components/Login.vue";
 
 Vue.use(VueRouter);
@@ -16,6 +17,7 @@ export const router = new VueRouter({
     { path: "/appointments", component: Appointments },
     { path: "/historyappoiment", component: HistoryAppoiment },
     { path: "/patients", component: Patients },
+    { path: "/addpacients", component: AddPacients },
     { path: "/login", component: Login },
   ],
 });
