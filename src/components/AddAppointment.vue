@@ -28,8 +28,8 @@
             No existe paciente con nombre {{ formData.nombreMascota }}. Dar de
             alta en:
             <!-- Ruta al componente Appointments -->
-            <router-link to="/appointments">
-              <a class="d-inline" href="#">Appointment</a>
+            <router-link to="/patients">
+              <a class="d-inline" href="#">Patients</a>
             </router-link>
           </div>
           <div slot="minlength" class="alert alert-danger mt-1 mb-0">
