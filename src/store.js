@@ -5,11 +5,11 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    isLogin: false,
+    isLogin: true,
   },
-  action: {
-    setValueIsLogin({ commit }, value) {
-      commit("refreshIsLogin", value);
+  actions: {
+    setValueIsLogin({commit}, value) {
+      commit('refreshIsLogin',value);
     },
   },
   mutation: {
