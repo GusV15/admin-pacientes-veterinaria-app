@@ -242,6 +242,7 @@ export default {
           this.formData = {
             ...this.formData,
             nombreDuenio: pacienteBuscado.nombre_duenio,
+            email: pacienteBuscado.email,
           };
         }
       } catch (error) {

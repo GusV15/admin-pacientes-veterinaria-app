@@ -133,6 +133,4 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
-.jumbotron {
-}
 </style>

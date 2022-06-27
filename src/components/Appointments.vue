@@ -2,9 +2,8 @@
   
   <section class="table-responsive">
     <h2 class="text-center my-2 text-success">Citas Pendientes</h2>
-    <table class="table table-dark">
+    <table v-if="citasPendientes.length" class="table table-dark">
         <tr>
-            <th>Id</th>
             <th>Nombre de Mascota</th>
             <th>Nombre de Dueño</th>
             <th>Fecha atención</th>
@@ -13,17 +12,20 @@
             <th></th>
         </tr>
         <tr v-for="cita in citasPendientes" :key="cita.id">
-            <td>{{ cita.id }}</td>
             <td>{{ cita.nombre }}</td>
             <td>{{ cita.nombre_duenio }}</td>
             <td>{{ cita.fecha_hora_atencion }}</td>
             <td>{{ cita.email }}</td>
             <td>{{ cita.sintomas }}</td>
-            <td><button @click="pasarAHistorial(cita)">Pasar a Atendido</button></td>
+            <td class="d-flex justify-content-center">
+              <button class="btn btn-success mr-1" @click="pasarAHistorial(cita)">Atendido</button>
+              <button class="btn btn-secondary mr-1" @click="pasarAHistorial(cita)">Editar</button>
+              <button class="btn btn-danger" @click="pasarAHistorial(cita)">Eliminar</button>
+              </td>
         </tr>
     </table>
 
-    <h4 v-if="!citasPendientes.length" class="alert alert-info">
+    <h4 v-else-if="!citasPendientes.length" class="alert alert-info">
         <span>No hay citas pendientes</span>
     </h4>
   </section>
