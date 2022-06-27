@@ -5,7 +5,7 @@
       <h2>{{ "Registro de Pacientes " | pasarAMayuscula }}</h2>
       <hr />
       <br>
-        <vue-form :state="formState" @submit.prevent="enviar()">
+        <vue-form :state="formState" @submit.prevent="agregar()">
     
         <!-- --------------------- -->
         <!--     Campo nombre      -->
@@ -260,7 +260,7 @@
         </validate>
 
         <!-- Botón de envío -->
-        <button class="btn btn-success my-4" :disabled="formState.$invalid">Enviar</button>
+        <button class="btn btn-success my-4" :disabled="formState.$invalid">Agregar</button>
       </vue-form>      
 
 <hr>
@@ -334,15 +334,19 @@ getInicialData(){
     id:'',
 }
 },
-enviar() {
-    let paciente = {...this.formData}
-        paciente.fecha = new Date().toLocaleString()
+async agregar() {
+    let pacienteNuevo = {...this.formData}
 
-         console.log(paciente)
-        this.pacientes.push(paciente)
+       try {
+          let { data: paciente } = await this.axios.post(this.url, pacienteNuevo, {'content-type' : 'application/json'})
+          console.log('AXIOS POST paciente', paciente)
 
-        this.formData = this.getInitialData()
-        this.formstate._reset()
+          //this.getpacientes()
+          this.pacientes.push(paciente)
+        }
+        catch(error) {
+          console.error('Error en posPaciente()', error.message)
+        }
     },
   async getPacientes() {
         try {
