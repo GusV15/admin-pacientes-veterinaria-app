@@ -16,11 +16,21 @@
           required
           :minlength="nombreMascotaMinLength"
           :maxlength="nombreMascotaMaxLength"
+          @blur="consultarPacientes(formData.nombreMascota)"
+          no-existe
         />
 
         <field-messages name="nombreMascota" show="$dirty">
           <div slot="required" class="alert alert-danger mt-1 mb-0">
             Campo requerido
+          </div>
+          <div slot="no-existe" class="alert alert-danger mt-1 mb-0">
+            No existe paciente con nombre {{ formData.nombreMascota }}. Dar de
+            alta en:
+            <!-- Ruta al componente Appointments -->
+            <router-link to="/appointments">
+              <a class="d-inline" href="#">Appointment</a>
+            </router-link>
           </div>
           <div slot="minlength" class="alert alert-danger mt-1 mb-0">
             Este campo requiere como mínimo
@@ -172,6 +182,9 @@ export default {
   data() {
     return {
       url: "https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/citas",
+      urlPacientes:
+        "https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/pacientes",
+      existePaciente: false,
       formState: {},
       formData: this.getInicialData(),
       nombreMascotaMinLength: 3,
@@ -191,7 +204,12 @@ export default {
         sintomas: "",
       };
     },
-    async enviarCita() {
+    enviarCita() {
+      this.altaCita();
+      this.formData = this.getInicialData();
+      this.formState._reset();
+    },
+    async altaCita() {
       const { nombreMascota, nombreDuenio, fechaAtencion, email, sintomas } =
         this.formData;
       let cita = {
@@ -210,8 +228,25 @@ export default {
       } catch (error) {
         console.error("Error en enviarCita()", error.message);
       }
-      this.formData = this.getInicialData();
-      this.formState._reset();
+    },
+    async consultarPacientes(nombre) {
+      try {
+        let { data: pacientes } = await this.axios(this.urlPacientes);
+        let pacienteBuscado =
+          pacientes.length > 0
+            ? pacientes.find((paciente) => paciente.nombre == nombre)
+            : {};
+        this.existePaciente = pacienteBuscado ? true : false;
+        console.log("pacientes", pacienteBuscado);
+        if (this.existePaciente) {
+          this.formData = {
+            ...this.formData,
+            nombreDuenio: pacienteBuscado.nombre_duenio,
+          };
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
   computed: {},
