@@ -11,12 +11,12 @@ import { router } from "./router";
 import "./axios";
 import "./globalFilters";
 //import './globalMixins'
-//import store from './store'
+import store from "./store";
 
 Vue.config.productionTip = false;
 
 new Vue({
   router,
-  //store,
+  store,
   render: (h) => h(App),
 }).$mount("#app");
