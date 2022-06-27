@@ -1,7 +1,8 @@
 <template >
-  <section>
+  <section class="src-components-history-appoiment">
     <div class="jumbotron">
-      <h2>{{ "History Appointment" | pasarAMayuscula }}</h2>
+   
+      <h2>{{ "Historia Clinica" | pasarAMayuscula }}</h2>
       <hr />
 
       <form novalidate @submit.prevent="enviar()">
@@ -34,19 +35,19 @@
             >
           </h6>
           <p>
-            Pet: <b>{{ cita.nombre }}</b>
+            Mascota: <b>{{ cita.nombre }}</b>
           </p>
           <p>
-            Human Name: <b>{{ cita.nombre_duenio }}</b>
+           Nombre de Humano: <b>{{ cita.nombre_duenio }}</b>
           </p>
           <p>
-            Date and time of attention: <b>{{ cita.fecha_hora_atencion }}</b>
+            Dia de atención: <b>{{ cita.fecha_hora_atencion }}</b>
           </p>
           <p>
             Email: <b>{{ cita.email }}</b>
           </p>
           <p>
-            Observation: <b>{{ cita.sintomas }}</b>
+            Observación: <b>{{ cita.sintomas }}</b>
           </p>
           <!--  <p>atendido: <b>{{ cita.atendido }}</b></p> -->
           <!-- <button class="btn btn-danger mt-3" @click="deleteHistorial(cita.id)">DELETE</button> -->
@@ -162,8 +163,9 @@ computed: {
 </script>
 
 <style scoped lang="css">
-.jumbotron {
-  background-color: white;
+  .jumbotron {
+    background-color: cadetblue;
+    color: white;
 }
 
 hr {
