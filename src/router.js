@@ -7,8 +7,11 @@ import HistoryAppoiment from "./components/HistoryAppoiment.vue";
 import Patients from "./components/Patients.vue";
 import AddPacients from "./components/AddPacients/IndexAddPacients.vue";
 import Login from "./components/Login.vue";
+import Store from "./store";
 
 Vue.use(VueRouter);
+
+
 
 export const router = new VueRouter({
   mode: "history",
@@ -19,5 +22,24 @@ export const router = new VueRouter({
     { path: "/patients", component: Patients },
     { path: "/addpacients", component: AddPacients },
     { path: "/login", component: Login },
+    { path: "/*", redirect: "/login" },
+    { path: "/", redirect: "/login" },
   ],
 });
+
+
+router.beforeEach((to, from, next) => {
+  if (to.path != '/login'){
+    if(Store.state.isLogin){
+      next()
+    }else{
+      next('/login')
+    }
+  }else if(to.path == '/login'){
+    if(Store.state.isLogin){
+     next('/addappointment')
+    }else{
+      next()
+    }
+  }
+})

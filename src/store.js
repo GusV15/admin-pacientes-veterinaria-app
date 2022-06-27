@@ -8,13 +8,11 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     isLogin: false,
-    pacientes:[],
-    
- 
+    pacientes:[]
   },
-  action: {
-    setValueIsLogin({ commit }, value) {
-      commit("refreshIsLogin", value);
+  actions: {
+    setValueIsLogin({commit}, value) {
+      commit('refreshIsLogin',value);
     },
 
      getPacientes({commit}) {
