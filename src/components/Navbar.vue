@@ -47,13 +47,27 @@
             </router-link>
           </li> -->
 
-  <!-- Ruta al componente Add Patients -->
+          <!-- Ruta al componente Add Patients -->
           <li class="nav-item">
             <router-link to="/addpacients">
               <a class="nav-link" href="#">Agregar Paciente</a>
             </router-link>
           </li>
-          
+
+            <!-- Ruta al componente List Patients -->
+          <li class="nav-item">
+            <router-link to="/patientlist">
+              <a class="nav-link" href="#">Lista de Pacientes</a>
+            </router-link>
+          </li>
+
+             <!-- Ruta al componente Edit Patient -->
+          <li class="nav-item">
+            <router-link to="/editpatient">
+              <a class="nav-link" href="#">Editar Paciente</a>
+            </router-link>
+          </li>
+        
         </ul>
       </div>
     </nav>
