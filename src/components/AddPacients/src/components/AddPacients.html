@@ -2,6 +2,7 @@
 <section class="src-components-add-pacients">
   <div class="jumbotron">
     <h2>{{ "Registro de Pacientes " | pasarAMayuscula }}</h2>
+    <p><pre>{{saludar()}}</pre></p> 
     <hr />
     <br>
       <vue-form :state="formState" @submit.prevent="agregar()">
@@ -261,42 +262,10 @@
       <!-- Botón de envío -->
       <button class="btn btn-success my-4" :disabled="formState.$invalid">Agregar</button>
     </vue-form>      
-   
-    <hr>
-    <p><pre>{{mostrarPacientes}}</pre></p> 
-    <p><pre>{{saludar()}}</pre></p> 
-<hr>
-<h2>REGISTRO DE PACIENTES</h2>
-    <br>
-<div v-if="pacientes.length" class="table-responsive">
-<table class="table table-dark">
-      <tr>
-        <th>NOMBRE</th>
-        <th>ESPECIE</th>
-        <th>RAZA</th>
-         <th>EDAD</th>
-           <th>SEXO</th>
-             <th>HUMANO</th>
-             <th>DIRECCION</th>
-             <th>EMAIL</th>
-      </tr>
-     
-      <tr v-for="(paciente, index) in pacientes" :key="index" >
-       <td>{{ paciente.nombre }}</td>
-        <td>{{ paciente.especie }}</td>
-        <td>{{ paciente.raza }}</td>
-        <td>{{ paciente.edad }}</td>
-        <td>{{ paciente.sexo}}</td>
-        <td>{{ paciente.nombre_duenio}}</td>
-        <td>{{ paciente.direccion}}</td>
-        <td>{{ paciente.email}}</td>
-        
-      </tr>
-      
-    </table>
-    </div>
-     <h3 v-else class="alert alert-info">No hay Pacientes Registrados</h3>
-    </div>
-<span  class="alert alert-secondary ">{{ "Cantidad de registros: " | pasarAMayuscula }} {{this.actualizarRegistros.total}}</span><br><br>
+
+    <!-- <p><pre>{{mostrarPacientes}}</pre></p>  -->
+ 
+</div>
+
 </section>
 

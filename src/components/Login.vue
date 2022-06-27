@@ -4,7 +4,7 @@
       <h2>Login</h2>
       <hr />
 
-      <vue-form :state="formState" @submit.prevent="login()">
+      <vue-form :state="formState" @submit.prevent="logIn()">
         <!-- --------------------- -->
         <!--     Campo usuario     -->
         <!-- --------------------- -->
@@ -76,12 +76,15 @@
           class="btn btn-outline-primary my-4"
           style="width: 100%"
           :disabled="formState.$invalid"
-          @click="login()"
+          @click="logIn()"
         >
-          Login
+          Log in
         </button>
       </vue-form>
     </div>
+    <p>isLogin del store</p> {{$store.state.isLogin}}
+    <br>
+    <p>isLogin del Login</p>{{isLogin2}}
   </section>
 </template>
 
@@ -92,6 +95,7 @@ export default {
   mounted() {},
   data() {
     return {
+      isLogin2: false,
       formState: {},
       formData: this.getInicialData(),
       usuarioMinLength: 5,
@@ -109,7 +113,7 @@ export default {
         password: "",
       };
     },
-    login() {
+    logIn() {
       this.usuarioLogin = this.formData;
       this.formData = this.getInicialData();
       this.formState._reset();
@@ -118,7 +122,8 @@ export default {
       } else if (this.usuarioRegistado.password != this.usuarioLogin.password) {
         window.alert("Contraseña invalido");
       } else {
-        this.$store.dispatch("setValueIsLogin", true);
+        this.$store.dispatch('setValueIsLogin', true);
+        this.isLogin2 = true;
       }
     },
   },
@@ -128,7 +133,7 @@ export default {
 
 <style scoped lang="css">
 .src-components-login {
-  width: 30%;
+  width: 40%;
   margin-top: 40px;
   margin-left: auto;
   margin-right: auto;
