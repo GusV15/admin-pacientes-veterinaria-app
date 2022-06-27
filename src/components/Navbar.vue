@@ -41,11 +41,19 @@
           </li>
 
            <!-- Ruta al componente Add Patients -->
-          <li class="nav-item">
+         <!--  <li class="nav-item">
             <router-link to="/patients">
               <a class="nav-link" href="#">Patients</a>
             </router-link>
+          </li> -->
+
+  <!-- Ruta al componente Add Patients -->
+          <li class="nav-item">
+            <router-link to="/addpacients">
+              <a class="nav-link" href="#">Agregar Paciente</a>
+            </router-link>
           </li>
+          
         </ul>
       </div>
     </nav>

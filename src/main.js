@@ -10,7 +10,7 @@ import "./form";
 import { router } from "./router";
 import "./axios";
 import "./globalFilters";
-//import './globalMixins'
+import "./globalMixins";
 import "./alerts";
 import store from "./store";
 

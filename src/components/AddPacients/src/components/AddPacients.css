@@ -1,0 +1,31 @@
+.src-components-add-pacients {
+
+}
+.jumbotron {
+    background-color: steelblue;
+    color: white;
+}
+
+hr {
+    background-color: #bbb;
+}  
+
+pre {
+  color: white;
+}
+
+.item { text-align: right; }
+.finp { width: 60%; }
+
+label{
+display: inline-block;
+width: 80px;
+}
+
+td{
+color:black;
+background-color:gainsboro;
+}
+input{
+border-radius: 5px;
+}

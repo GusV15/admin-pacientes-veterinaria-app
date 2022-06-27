@@ -153,10 +153,10 @@
         <!-- --------------------- -->
        
           <!-- Elemento de entrada -->
-        <input class="my-4" type="radio" name="sexo" id="macho"  value="macho" v-model="formData.sexo" checked>
+        <input class="my-4" type="radio" name="sexo" id="macho"  value="macho" v-model="formData.sexo" selected="true" >
         <label class="radio-inline">Macho </label>   
         
-        <input type="radio"  name="sexo" id="hembra" class="ml-3" value="hembra" v-model="formData.sexo" checked>
+        <input type="radio"  name="sexo" id="hembra" class="ml-3" value="hembra" v-model="formData.sexo">
         <label for="mujer">Hembra </label>
             <br> 
               
@@ -308,6 +308,7 @@
     mounted () {
 document.querySelector('#macho').checked = true;
 this.getPacientes()
+this.getInicialData()
     },
     data () {
       return {
@@ -327,7 +328,7 @@ getInicialData(){
     especie:'',
     raza:'',
     edad:'',
-    sexo:'',
+    sexo:'macho',
     nombre_duenio:'',
     direccion:'',
     email:'',
@@ -347,6 +348,9 @@ async agregar() {
         catch(error) {
           console.error('Error en posPaciente()', error.message)
         }
+          this.formData = this.getInicialData() 
+        this.formState._reset()
+        document.querySelector('#macho').checked = true;
     },
   async getPacientes() {
         try {
