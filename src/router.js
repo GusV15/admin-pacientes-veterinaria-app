@@ -49,7 +49,7 @@ export const router = new VueRouter({
       component: HistoryAppoiment,
     },
     {
-      path: '/addpacients/:id',
+      path: '/addpacients',
       meta: {
         requiresAuth: true,
       },

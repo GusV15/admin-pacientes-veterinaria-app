@@ -89,6 +89,10 @@
         catch(error) {
           console.error('Error en eliminarCita()', error.message)
         }
+        this.$swal({
+        icon: 'success',
+        title: 'Cita eliminada exitosamente',
+      });
       }
     },
     computed: {
