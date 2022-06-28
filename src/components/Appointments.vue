@@ -1,35 +1,39 @@
 <template lang="html">
-  
   <section class="table-responsive">
     <h2 class="text-center my-2 text-success">Citas Pendientes</h2>
     <table v-if="citasPendientes.length" class="table table-dark">
-        <tr>
-            <th>Nombre de Mascota</th>
-            <th>Nombre de Dueño</th>
-            <th>Fecha atención</th>
-            <th>Email</th>
-            <th>Síntomas</th>
-            <th></th>
-        </tr>
-        <tr v-for="cita in citasPendientes" :key="cita.id">
-            <td>{{ cita.nombre }}</td>
-            <td>{{ cita.nombre_duenio }}</td>
-            <td>{{ cita.fecha_hora_atencion }}</td>
-            <td>{{ cita.email }}</td>
-            <td>{{ cita.sintomas }}</td>
-            <td class="d-flex justify-content-center">
-              <button class="btn btn-success mr-1" @click="pasarAHistorial(cita)">Atendido</button>
-              <button class="btn btn-secondary mr-1" @click="pasarAHistorial(cita)">Editar</button>
-              <button class="btn btn-danger" @click="pasarAHistorial(cita)">Eliminar</button>
-              </td>
-        </tr>
+      <tr>
+        <th>Nombre de Mascota</th>
+        <th>Nombre de Dueño</th>
+        <th>Fecha atención</th>
+        <th>Email</th>
+        <th>Síntomas</th>
+        <th></th>
+      </tr>
+      <tr v-for="cita in citasPendientes" :key="cita.id">
+        <td>{{ cita.nombre }}</td>
+        <td>{{ cita.nombre_duenio }}</td>
+        <td>{{ cita.fecha_hora_atencion }}</td>
+        <td>{{ cita.email }}</td>
+        <td>{{ cita.sintomas }}</td>
+        <td class="d-flex justify-content-center">
+          <button class="btn btn-success mr-1" @click="pasarAHistorial(cita)">
+            Atendido
+          </button>
+          <button class="btn btn-secondary mr-1" @click="editarCita(cita)">
+            Editar
+          </button>
+          <button class="btn btn-danger" @click="EliminarCita(cita)">
+            Eliminar
+          </button>
+        </td>
+      </tr>
     </table>
 
     <h4 v-else-if="!citasPendientes.length" class="alert alert-info">
-        <span>No hay citas pendientes</span>
+      <span>No hay citas pendientes</span>
     </h4>
   </section>
-
 </template>
 
 <script lang="js">
@@ -69,15 +73,15 @@
         } catch (error) {
           console.error("Error en pasarAHistorial()", error.message);
         }
-
+      },
+      editarCita(cita) {
+        this.$router.push({ path: 'addappointment', params: { citaId: cita.id } });
       }
     },
     computed: {
 
     }
 }
-
-
 </script>
 
 <style scoped lang="css">

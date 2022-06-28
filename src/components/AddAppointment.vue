@@ -27,7 +27,7 @@
           <div slot="no-existe" class="alert alert-danger mt-1 mb-0">
             No existe paciente con nombre {{ formData.nombreMascota }}. Dar de
             alta en:
-            <!-- Ruta al componente Appointments -->
+            <!-- Ruta al componente Patients -->
             <router-link to="/patients">
               <a class="d-inline" href="#">Patients</a>
             </router-link>
@@ -176,14 +176,14 @@
 
 <script>
 export default {
-  name: "src-components-add-appointment",
+  name: 'src-components-add-appointment',
   props: [],
   mounted() {},
   data() {
     return {
-      url: "https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/citas",
+      url: 'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/citas',
       urlPacientes:
-        "https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/pacientes",
+        'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/pacientes',
       existePaciente: false,
       formState: {},
       formData: this.getInicialData(),
@@ -196,12 +196,12 @@ export default {
   methods: {
     getInicialData() {
       return {
-        nombreMascota: "",
-        nombreDuenio: "",
-        fechaAtencion: "",
-        horaAtencion: "",
-        email: "",
-        sintomas: "",
+        nombreMascota: '',
+        nombreDuenio: '',
+        fechaAtencion: '',
+        horaAtencion: '',
+        email: '',
+        sintomas: '',
       };
     },
     enviarCita() {
@@ -216,17 +216,17 @@ export default {
         nombre: nombreMascota,
         nombre_duenio: nombreDuenio,
         fecha_hora_atencion: fechaAtencion,
-        email: email,
-        sintomas: sintomas,
+        email,
+        sintomas,
         atendido: false,
       };
       try {
         let { data: citas } = await this.axios.post(this.url, cita, {
-          "content-type": "application/json",
+          'content-type': 'application/json',
         });
-        console.log("AXIOS POST Citas", citas);
+        console.log('AXIOS POST Citas', citas);
       } catch (error) {
-        console.error("Error en enviarCita()", error.message);
+        console.error('Error en enviarCita()', error.message);
       }
     },
     async consultarPacientes(nombre) {
@@ -237,7 +237,7 @@ export default {
             ? pacientes.find((paciente) => paciente.nombre == nombre)
             : {};
         this.existePaciente = pacienteBuscado ? true : false;
-        console.log("pacientes", pacienteBuscado);
+        console.log('pacientes', pacienteBuscado);
         if (this.existePaciente) {
           this.formData = {
             ...this.formData,

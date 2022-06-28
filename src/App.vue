@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <Header />
-    <Navbar v-if="$store.state.isLogin"/>
-    <router-view ></router-view>
+    <Navbar v-if="$store.state.isLogin" />
+    <router-view></router-view>
 
     <!-- <Binding />
       <Estructura />

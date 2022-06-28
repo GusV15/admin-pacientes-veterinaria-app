@@ -82,48 +82,45 @@
         </button>
       </vue-form>
     </div>
-    <p>isLogin del store</p> {{$store.state.isLogin}}
-    <br>
-    <p>isLogin del Login</p>{{isLogin2}}
+    <p>isLogin del store</p>
+    {{ this.$store.state.isLogin }}
+    <br />
   </section>
 </template>
 
 <script>
 export default {
-  name: "src-components-login",
+  name: 'src-components-login',
   props: [],
   mounted() {},
   data() {
     return {
-      isLogin2: false,
       formState: {},
-      formData: this.getInicialData(),
+      formData: { usuario: 'gustavo123', password: '12345678' },
       usuarioMinLength: 5,
       usuarioMaxLength: 15,
       passwordMinLength: 8,
       passwordMaxLength: 15,
-      usuarioRegistado: { usuario: "user123", password: "12345678" },
-      usuarioLogin: {},
+      usuarioRegistado: { usuario: 'gustavo123', password: '12345678' },
     };
   },
   methods: {
     getInicialData() {
       return {
-        usuario: "",
-        password: "",
+        usuario: '',
+        password: '',
       };
     },
     logIn() {
-      this.usuarioLogin = this.formData;
+      let usuarioLogin = { ...this.formData };
       this.formData = this.getInicialData();
       this.formState._reset();
-      if (this.usuarioRegistado.usuario != this.usuarioLogin.usuario) {
-        window.alert("Usuario invalido");
-      } else if (this.usuarioRegistado.password != this.usuarioLogin.password) {
-        window.alert("Contraseña invalido");
+      if (this.usuarioRegistado.usuario != usuarioLogin.usuario) {
+        window.alert('Usuario invalido');
+      } else if (this.usuarioRegistado.password != usuarioLogin.password) {
+        window.alert('Contraseña invalido');
       } else {
         this.$store.dispatch('setValueIsLogin', true);
-        this.isLogin2 = true;
       }
     },
   },

@@ -11,7 +11,7 @@
     <div class="divHeader">
       <h1>Administrador Pacientes Veterinaria</h1>
     </div>
-    <div class="divHeader mr-3" >
+    <div class="divHeader mr-3">
       <div>
         <img
           alt="Usuario logo"
@@ -20,35 +20,31 @@
         />
       </div>
       <div v-if="!$store.state.isLogin">
-        <router-link to="/login" class="login">
+        <router-link to="/" class="login">
           <a>Log in</a>
         </router-link>
       </div>
       <div v-if="$store.state.isLogin">
-        <router-link to="/" class="login" @click="logOut()">
+        <router-link to="/login" class="login" @click="logOut()">
           <a>Log Out</a>
         </router-link>
-
-       
-        
       </div>
-
     </div>
   </section>
 </template>
 
 <script>
 export default {
-  name: "src-components-header",
+  name: 'src-components-header',
   props: [],
   mounted() {},
   data() {
     return {};
   },
   methods: {
-    logOut(){
-       this.$store.dispatch('setValueIsLogin', false);
-    }
+    logOut() {
+      this.$store.dispatch('setValueIsLogin', false);
+    },
   },
   computed: {},
 };
@@ -76,6 +72,6 @@ h6 {
   display: inline-block;
   width: 100%;
   color: azure;
-  text-align:center;
+  text-align: center;
 }
 </style>
