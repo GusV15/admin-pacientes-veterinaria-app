@@ -75,7 +75,7 @@
         }
       },
       editarCita(cita) {
-        this.$router.push({ path: 'addappointment', params: { citaId: cita.id } });
+        this.$router.push({ name: 'addappointment', params: { citaAEditar: cita } });
       }
     },
     computed: {

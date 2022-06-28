@@ -47,7 +47,7 @@ export default {
   methods: {
     logOut() {
       console.log('logOut');
-      this.$store.dispatch('doLogout', { name: null, auth: false });
+      this.$store.dispatch('logOut', { name: null, auth: false });
     },
   },
   computed: {},

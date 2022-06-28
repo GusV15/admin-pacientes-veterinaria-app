@@ -1,7 +1,7 @@
 <template>
   <section class="container mt-3">
-    <vue-form class="pt-4" :state="formState" @submit.prevent="enviarCita()">
-      <h2>Completar formulario para crear cita nueva</h2>
+    <vue-form class="pt-4" :state="formState">
+      <h2>{{ formTitle }}</h2>
       <!-- Campo Nombre de Mascota -->
       <validate tag="div">
         <label for="nombreMascota">Nombre de Mascota</label>
@@ -11,7 +11,6 @@
           name="nombreMascota"
           placeholder="Nombre Mascota"
           class="form-control"
-          autocomplete="off"
           v-model.trim="formData.nombreMascota"
           required
           :minlength="nombreMascotaMinLength"
@@ -28,7 +27,7 @@
             No existe paciente con nombre {{ formData.nombreMascota }}. Dar de
             alta en:
             <!-- Ruta al componente Patients -->
-            <router-link to="/patients">
+            <router-link to="/addpacients">
               <a class="d-inline" href="#">Patients</a>
             </router-link>
           </div>
@@ -52,7 +51,6 @@
           name="nombreDuenio"
           placeholder="Nombre Dueño Mascota"
           class="form-control"
-          autocomplete="off"
           v-model.trim="formData.nombreDuenio"
           required
           :minlength="nombreDuenioMinLength"
@@ -83,7 +81,6 @@
           id="fechaAtencion"
           name="fechaAtencion"
           class="form-control"
-          autocomplete="off"
           v-model.trim="formData.fechaAtencion"
           required
         />
@@ -104,7 +101,6 @@
           id="horaAtencion"
           name="horaAtencion"
           class="form-control"
-          autocomplete="off"
           v-model.trim="formData.horaAtencion"
           required
         />
@@ -125,7 +121,6 @@
           id="email"
           name="email"
           class="form-control"
-          autocomplete="off"
           v-model.trim="formData.email"
           required
         />
@@ -164,6 +159,18 @@
 
       <!-- Botón de envío -->
       <button
+        v-if="this.citaAEditar"
+        type="submit"
+        @click.prevent="editarCita()"
+        class="py-3 mt-2 btn btn-success btn-block"
+        :disabled="formState.$invalid"
+      >
+        EDITAR
+      </button>
+      <button
+        v-else-if="!this.citaAEditar"
+        type="submit"
+        @click.prevent="enviarCita()"
         class="py-3 mt-2 btn btn-success btn-block"
         :disabled="formState.$invalid"
       >
@@ -177,13 +184,15 @@
 <script>
 export default {
   name: 'src-components-add-appointment',
-  props: [],
-  mounted() {},
+  props: ['citaAEditar'],
+  mounted() {
+    this.completarFormulario();
+  },
   data() {
     return {
-      url: 'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/citas',
+      url: 'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/citas/',
       urlPacientes:
-        'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/pacientes',
+        'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/pacientes/',
       existePaciente: false,
       formState: {},
       formData: this.getInicialData(),
@@ -191,6 +200,9 @@ export default {
       nombreMascotaMaxLength: 15,
       nombreDuenioMinLength: 3,
       nombreDuenioMaxLength: 15,
+      formTitle: this.citaAEditar
+        ? 'Editar Cita'
+        : 'Completar formulario para crear cita nueva',
     };
   },
   methods: {
@@ -228,6 +240,47 @@ export default {
       } catch (error) {
         console.error('Error en enviarCita()', error.message);
       }
+      this.$swal({
+        icon: 'success',
+        title: 'Cita cargada exitosamente',
+      });
+    },
+    async editarCita() {
+      console.log('Editar Citas');
+      const { nombreMascota, nombreDuenio, fechaAtencion, email, sintomas } =
+        this.formData;
+      let citaEditada = {
+        nombre: nombreMascota,
+        nombre_duenio: nombreDuenio,
+        fecha_hora_atencion: fechaAtencion,
+        email,
+        sintomas,
+        atendido: false,
+      };
+      try {
+        let { data: citas } = await this.axios.put(
+          this.url + this.citaAEditar.id,
+          citaEditada,
+          {
+            'content-type': 'application/json',
+          }
+        );
+        console.log('AXIOS PUT Citas', citas);
+      } catch (error) {
+        console.error('Error en enviarCita()', error.message);
+      }
+      this.formData = this.getInicialData();
+      this.formState._reset();
+      let redirect = this.$router.push({ name: 'appointments' });
+      this.$swal({
+        icon: 'success',
+        type: 'success',
+        title: 'Cita editada exitosamente',
+        timer: 1000,
+        showConfirmButton: false,
+      }).then(function () {
+        redirect;
+      });
     },
     async consultarPacientes(nombre) {
       try {
@@ -247,6 +300,20 @@ export default {
         }
       } catch (error) {
         console.error(error);
+      }
+    },
+    completarFormulario() {
+      if (this.citaAEditar) {
+        const { nombre, nombre_duenio, fecha_hora_atencion, email, sintomas } =
+          this.citaAEditar;
+        let cita = {
+          nombreMascota: nombre,
+          nombreDuenio: nombre_duenio,
+          fechaAtencion: fecha_hora_atencion,
+          email,
+          sintomas,
+        };
+        this.formData = cita;
       }
     },
   },

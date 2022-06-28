@@ -11,16 +11,13 @@ export default new Vuex.Store({
     pacientes: [],
   },
   actions: {
-    doLogin({ commit }, payload) {
+    logIn({ commit }, payload) {
       commit('doLogin', payload);
     },
-    doLogout({ commit }, payload) {
-      commit('setLogout', payload);
+    logOut({ commit }, payload) {
+      commit('doLogout', payload);
     },
     getPacientes({ commit }) {
-      /* delay(1000)
-          .then(() => { commit('incrementar',cant) })
-          .catch( error => console.error(error) ) */
       try {
         let { data: pacientes } = axios(
           'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/pacientes'
@@ -39,7 +36,7 @@ export default new Vuex.Store({
       state.auth = payload.auth;
       state.username = payload.name;
     },
-    setLogout(state, payload) {
+    doLogout(state, payload) {
       console.log(payload);
       state.auth = payload.auth;
       state.username = payload.name;

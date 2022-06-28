@@ -19,18 +19,64 @@ export const router = new VueRouter({
     {
       path: '/home',
       name: 'Home',
+      meta: {
+        requiresAuth: true,
+      },
       component: Home,
     },
-    { path: '/addappointment', component: AddAppointment },
-    { path: '/appointments', component: Appointments },
-    { path: '/historyappoiment', component: HistoryAppoiment },
-    { path: '/addpacients', component: AddPacients },
-    { path: '/patientlist', component: PatientList },
-    { path: '/editpatient', component: EditPatient },
+    {
+      path: '/addappointment',
+      name: 'addappointment',
+      meta: {
+        requiresAuth: true,
+      },
+      component: AddAppointment,
+      props: true,
+    },
+    {
+      path: '/appointments',
+      name: 'appointments',
+      meta: {
+        requiresAuth: true,
+      },
+      component: Appointments,
+    },
+    {
+      path: '/historyappoiment',
+      meta: {
+        requiresAuth: true,
+      },
+      component: HistoryAppoiment,
+    },
+    {
+      path: '/addpacients/:id',
+      meta: {
+        requiresAuth: true,
+      },
+      component: AddPacients,
+      props: true,
+    },
+    {
+      path: '/patientlist',
+      meta: {
+        requiresAuth: true,
+      },
+      component: PatientList,
+    },
+    {
+      path: '/editpatient',
+      meta: {
+        requiresAuth: true,
+      },
+      component: EditPatient,
+    },
     {
       path: '/editpatient/:id',
       name: 'editPatient',
       component: EditPatient,
+      meta: {
+        requiresAuth: true,
+      },
       props: true,
     },
     { path: '/login', name: 'Login', component: Login },
@@ -40,6 +86,13 @@ export const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== 'Login' && !store.state.auth) next({ name: 'Login' });
-  else next();
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    if (store.state.auth) {
+      next();
+    } else {
+      next({ name: 'Login' });
+    }
+  } else {
+    next();
+  }
 });
