@@ -11,16 +11,28 @@
     <div class="divHeader">
       <h1>Administrador Pacientes Veterinaria</h1>
     </div>
-    <div class="divHeader">
-      <router-link to="/login" class="login">
-        <a>
-          <img
-            alt="Usuario logo"
-            src="https://c0.klipartz.com/pngpicture/81/570/gratis-png-perfil-logo-iconos-de-computadora-usuario-usuario.png"
-            width="50"
-          />Log in</a
-        >
-      </router-link>
+    <div class="divHeader mr-3" >
+      <div>
+        <img
+          alt="Usuario logo"
+          src="https://c0.klipartz.com/pngpicture/81/570/gratis-png-perfil-logo-iconos-de-computadora-usuario-usuario.png"
+          width="50"
+        />
+      </div>
+      <div v-if="!$store.state.isLogin">
+        <router-link to="/login" class="login">
+          <a>Log in</a>
+        </router-link>
+      </div>
+      <div v-if="$store.state.isLogin">
+        <router-link to="/" class="login" @click="logOut()">
+          <a>Log Out</a>
+        </router-link>
+
+       
+        
+      </div>
+
     </div>
   </section>
 </template>
@@ -33,7 +45,11 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {
+    logOut(){
+       this.$store.dispatch('setValueIsLogin', false);
+    }
+  },
   computed: {},
 };
 </script>
@@ -58,8 +74,8 @@ h6 {
 }
 .login {
   display: inline-block;
-  width: 50%;
+  width: 100%;
   color: azure;
-  text-align: right;
+  text-align:center;
 }
 </style>
