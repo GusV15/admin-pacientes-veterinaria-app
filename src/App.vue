@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <Header />
-    <Navbar />
+    <Navbar 
+    />
     <router-view></router-view>
 
     <!-- <Binding />

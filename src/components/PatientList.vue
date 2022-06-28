@@ -2,9 +2,25 @@
 
   <section class="src-components-patient-list">
    <div class="jumbotron">
-    <h2>{{ "Listado de Pacientes" | pasarAMayuscula }}</h2>
+  <!-- <button @click="getPacientes()">Traer pacientes</button> -->
+  <h2>{{ "Listado de Pacientes" | pasarAMayuscula }}</h2>
     <hr />
- 
+ <form novalidate @submit.prevent="enviar()">
+        <!-- Campo nombre -->
+        <div class="form-group">
+          <label for="nombre">Name</label>
+          <input
+            id="nombre"
+            class="form-control"
+            type="search"
+            placeholder="Search by name"
+            v-model.trim="formData.nombre"
+            @input="formDirty.nombre = true"
+          />
+        </div>
+      </form>
+      <br />
+
 <div v-if="pacientes.length" class="table-responsive">
 <table class="table table-dark">
       <tr>
@@ -19,7 +35,7 @@
              <th>ACCION</th>
       </tr>
      
-      <tr v-for="(paciente, index) in pacientes" :key="index" >
+      <tr v-for="(paciente, index) in mostrarPorNombre(formData.nombre)" :key="index" >
        <td>{{ paciente.nombre }}</td>
         <td>{{ paciente.especie }}</td>
         <td>{{ paciente.raza }}</td>
@@ -28,7 +44,8 @@
         <td>{{ paciente.nombre_duenio}}</td>
         <td>{{ paciente.direccion}}</td>
         <td>{{ paciente.email}}</td>
-        <td class="finp"><button  class="btn btn-danger" >X</button><button class="btn btn-warning ml-2" >E</button></td>
+        <td class="finp"><button  class="btn btn-danger" @click="deletePaciente(paciente.id)">Eliminar
+        </button><button class="btn btn-warning ml-2" @click="irAActualizarPaciente(paciente.id)" >Editar</button></td>
          
         
       </tr>
@@ -37,7 +54,22 @@
     </div>
      <h3 v-else class="alert alert-info">No hay Pacientes Registrados</h3>
     </div>
-<span  class="alert alert-secondary ">{{ "Cantidad de registros: " | pasarAMayuscula }} {{this.actualizarRegistros.total}}</span><br><br>
+ <span
+        class="alert alert-danger"
+        v-if="!calcularHistorialPorNombre.existeEnGeneral"
+      >
+        No hay Registro</span
+      >
+      <span
+        :class="getClass(!estado)"
+        v-else-if="this.formData.nombre == null || this.formData.nombre == ''"
+        >Total de registros:
+        {{ calcularHistorialPorNombre.totalEnGeneral }}</span
+      >
+      <span :class="getClass(estado)" v-else-if="this.formData.nombre != null">
+        Se encontro {{ calcularHistorialPorNombre.cantidadPorNombre }} de
+        {{ calcularHistorialPorNombre.totalEnGeneral }} registros
+      </span>
     
   </section>
 
@@ -53,8 +85,13 @@ this.getPacientes();
     },
     data () {
       return {
- url: 'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/pacientes',
+      url: 'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/pacientes',
       pacientes:[],
+      estado:false,
+      formData : this.getInicialData(),
+      formDirty : this.getInicialData(),
+      cantPacientes :0,
+
       }
     },
     methods: {
@@ -68,14 +105,70 @@ async getPacientes() {
         console.error('Error en getPacientes()', error.message)
       }
     },
+     getClass(estado) {
+    return [{ 'alert alert-secondary':estado,'alert alert-success':!estado }, 'text-black', 'p-2', 'rounded'];          
+  },
+ enviar() {
+    this.formData = this.getInicialData(),
+    this.formDirty = this.getInicialData();
+  },
+    getInicialData() {
+    return {
+      nombre: null,
+    }
     },
-    computed: {
-actualizarRegistros(){
-let totalRegistros=this.pacientes.length
+      pasarAMayuscula(nom){
+    if(nom){
+      return nom.toUpperCase();
+    }
+  },
+mostrarPorNombre(nom){
+    return !nom ?
+    this.pacientes
+    :this.pacientes.filter(p =>  p.nombre.toUpperCase().includes(nom.toUpperCase()));
+  },
+  
+      async deletePaciente(id) {
+        console.log('deletePaciente', id)
 
-return{
-total:totalRegistros 
-} 
+        if(!confirm('¿Desea eliminar este paciente?'))return; 
+        try {
+          let { data: paciente } = await this.axios.delete(this.url+ "/"+ id)
+          console.log('AXIOS DELETE paciente', paciente)
+
+         
+          let index = this.pacientes.findIndex(p => p.id == paciente.id)
+          if(index == -1) throw new Error('paciente no encontrado')
+          this.pacientes.splice(index, 1)
+ 
+        }
+        catch(error) {
+          console.error('Error en deletePaciente()', error.message)
+        }
+      },
+     async irAActualizarPaciente(id){
+console.log(id)
+this.$router.push({
+  path:'/editPatient',
+  name:'editPatient',
+  params:{id:id}
+
+})
+      }
+    },
+
+    computed: {
+ calcularHistorialPorNombre() {
+    let cant = this.pacientes.filter(p =>  (p.nombre.toUpperCase().includes(this.pasarAMayuscula(this.formData.nombre)))).length;
+    let total = this.pacientes.length
+    return {
+            ningunoPorNombre : cant == 0,
+            existeEnGeneral: total > 0,
+            existePorNombre: cant > 0,
+            cantidadPorNombre : cant,
+            totalEnGeneral : total,
+            todos : cant == total,
+    }
   }
     }
 }
