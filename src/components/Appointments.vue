@@ -23,7 +23,7 @@
           <button class="btn btn-secondary mr-1" @click="editarCita(cita)">
             Editar
           </button>
-          <button class="btn btn-danger" @click="EliminarCita(cita)">
+          <button class="btn btn-danger" @click="eliminarCita(cita.id)">
             Eliminar
           </button>
         </td>
@@ -76,6 +76,19 @@
       },
       editarCita(cita) {
         this.$router.push({ name: 'addappointment', params: { citaAEditar: cita } });
+      },
+      async eliminarCita(id) {
+        try {
+          let { data: cita } = await this.axios.delete(this.url+id)
+          console.log('AXIOS DELETE Cita', cita)
+
+          let index = this.citasPendientes.findIndex(cita => cita.id == id)
+          if(index == -1) throw new Error('Cita no encontrada.')
+          this.citasPendientes.splice(index, 1)
+        }
+        catch(error) {
+          console.error('Error en eliminarCita()', error.message)
+        }
       }
     },
     computed: {
