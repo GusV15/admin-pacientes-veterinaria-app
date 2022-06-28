@@ -12,20 +12,23 @@
       <h1>Administrador Pacientes Veterinaria</h1>
     </div>
     <div class="divHeader mr-3">
-      <div>
+      <div class="d-flex align-items-center">
+        <div class="mr-1 text-white">
+          <span>{{ $store.state.username }}</span>
+        </div>
         <img
           alt="Usuario logo"
           src="https://c0.klipartz.com/pngpicture/81/570/gratis-png-perfil-logo-iconos-de-computadora-usuario-usuario.png"
           width="50"
         />
       </div>
-      <div v-if="!$store.state.isLogin">
-        <router-link to="/" class="login">
-          <a>Log in</a>
+      <div v-if="!$store.state.auth">
+        <router-link to="/home" class="login">
+          <a class="text-center">Log in</a>
         </router-link>
       </div>
-      <div v-if="$store.state.isLogin">
-        <router-link to="/login" class="login" @click="logOut()">
+      <div v-if="$store.state.auth" @click="logOut()">
+        <router-link to="/login" class="login">
           <a>Log Out</a>
         </router-link>
       </div>
@@ -43,7 +46,8 @@ export default {
   },
   methods: {
     logOut() {
-      this.$store.dispatch('setValueIsLogin', false);
+      console.log('logOut');
+      this.$store.dispatch('doLogout', { name: null, auth: false });
     },
   },
   computed: {},
@@ -72,6 +76,8 @@ h6 {
   display: inline-block;
   width: 100%;
   color: azure;
-  text-align: center;
+  text-align: right;
+  font-size: 0.8rem;
+  text-decoration: underline;
 }
 </style>

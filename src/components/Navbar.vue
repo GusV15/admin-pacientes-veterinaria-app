@@ -1,8 +1,8 @@
-<template >
+<template>
   <section class="src-components-navbar">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <router-link to="/">
-        <a class="navbar-brand" href="#">Inicio </a>
+      <router-link to="{ name: 'Dashboard' }">
+        <a class="navbar-brand" href="#">Inicio</a>
       </router-link>
 
       <button
@@ -47,20 +47,19 @@
             </router-link>
           </li>
 
-            <!-- Ruta al componente List Patients -->
+          <!-- Ruta al componente List Patients -->
           <li class="nav-item">
             <router-link to="/patientlist">
               <a class="nav-link" href="#">Lista de Pacientes</a>
             </router-link>
           </li>
 
-             <!-- Ruta al componente Edit Patient -->
+          <!-- Ruta al componente Edit Patient -->
           <li class="nav-item">
             <router-link to="/editpatient">
               <a class="nav-link" href="#">Editar Paciente</a>
             </router-link>
           </li>
-        
         </ul>
       </div>
     </nav>
@@ -87,8 +86,6 @@
 
     }
 }
-
-
 </script>
 
 <style scoped lang="css">

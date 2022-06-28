@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <Header />
-    <Navbar v-if="$store.state.isLogin" />
+    <Navbar v-if="$store.state.auth" />
     <router-view></router-view>
 
     <!-- <Binding />

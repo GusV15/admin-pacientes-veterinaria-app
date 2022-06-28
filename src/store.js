@@ -6,15 +6,17 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    isLogin: true,
+    username: null,
+    auth: false,
     pacientes: [],
   },
   actions: {
-    setValueIsLogin({ commit }, value) {
-      console.log('action', value);
-      commit('refreshIsLogin', value);
+    doLogin({ commit }, payload) {
+      commit('doLogin', payload);
     },
-
+    doLogout({ commit }, payload) {
+      commit('setLogout', payload);
+    },
     getPacientes({ commit }) {
       /* delay(1000)
           .then(() => { commit('incrementar',cant) })
@@ -31,12 +33,17 @@ export default new Vuex.Store({
       }
     },
   },
-  mutation: {
-    refreshIsLogin(state, value) {
-      console.log('mutation', value);
-      state.isLogin = value;
+  mutations: {
+    doLogin(state, payload) {
+      console.log(payload);
+      state.auth = payload.auth;
+      state.username = payload.name;
     },
-
+    setLogout(state, payload) {
+      console.log(payload);
+      state.auth = payload.auth;
+      state.username = payload.name;
+    },
     guardarPacientes(state, pacientes) {
       console.warn(
         'mutations -> guardarPacientes',

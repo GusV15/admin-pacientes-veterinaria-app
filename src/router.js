@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
+import Home from './components/Home.vue';
 import AddAppointment from './components/AddAppointment.vue';
 import Appointments from './components/Appointments.vue';
 import HistoryAppoiment from './components/HistoryAppoiment.vue';
@@ -15,6 +16,11 @@ Vue.use(VueRouter);
 export const router = new VueRouter({
   mode: 'history',
   routes: [
+    {
+      path: '/home',
+      name: 'Home',
+      component: Home,
+    },
     { path: '/addappointment', component: AddAppointment },
     { path: '/appointments', component: Appointments },
     { path: '/historyappoiment', component: HistoryAppoiment },
@@ -27,24 +33,13 @@ export const router = new VueRouter({
       component: EditPatient,
       props: true,
     },
-    { path: '/login', component: Login },
-    { path: '/*', redirect: '/login' },
-    { path: '/', redirect: '/login' },
+    { path: '/login', name: 'Login', component: Login },
+    { path: '/*', redirect: '/home' },
+    { path: '/', redirect: '/home' },
   ],
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.path != '/login') {
-    if (store.state.isLogin) {
-      next();
-    } else {
-      next('/login');
-    }
-  } else if (to.path == '/login') {
-    if (store.state.isLogin) {
-      next('/');
-    } else {
-      next();
-    }
-  }
+  if (to.name !== 'Login' && !store.state.auth) next({ name: 'Login' });
+  else next();
 });

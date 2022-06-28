@@ -10,26 +10,26 @@
         <!-- --------------------- -->
         <validate tag="div">
           <!-- Elemento de entrada -->
-          <label for="usuario">Usuario</label>
+          <label for="name">Usuario</label>
           <input
             type="text"
-            id="usuario"
-            name="usuario"
+            id="name"
+            name="name"
             class="form-control"
             autocomplete="off"
-            v-model.trim="formData.usuario"
+            v-model.trim="formData.name"
             required
-            :minlength="usuarioMinLength"
-            :maxlength="usuarioMaxLength"
+            :minlength="nameMinLength"
+            :maxlength="nameMaxLength"
             no-espacios
           />
           <!-- Mensajes de validación -->
-          <field-messages name="usuario" show="$dirty">
+          <field-messages name="name" show="$dirty">
             <div slot="required" class="alert alert-danger mt-1">
               Campo requerido
             </div>
             <div slot="minlength" class="alert alert-danger mt-1">
-              Este campo requiere como mínimo {{ usuarioMinLength }} caracteres.
+              Este campo requiere como mínimo {{ nameMinLength }} caracteres.
             </div>
             <div slot="no-espacios" class="alert alert-danger mt-1">
               No se permiten espacios intermedios en este campo.
@@ -82,9 +82,6 @@
         </button>
       </vue-form>
     </div>
-    <p>isLogin del store</p>
-    {{ this.$store.state.isLogin }}
-    <br />
   </section>
 </template>
 
@@ -95,33 +92,53 @@ export default {
   mounted() {},
   data() {
     return {
+      urlUsers:
+        'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/usuarios/',
       formState: {},
-      formData: { usuario: 'gustavo123', password: '12345678' },
-      usuarioMinLength: 5,
-      usuarioMaxLength: 15,
+      formData: { name: 'gustavo123', password: '12345678' },
+      nameMinLength: 5,
+      nameMaxLength: 15,
       passwordMinLength: 8,
       passwordMaxLength: 15,
-      usuarioRegistado: { usuario: 'gustavo123', password: '12345678' },
     };
   },
   methods: {
     getInicialData() {
       return {
-        usuario: '',
+        name: '',
         password: '',
       };
     },
+    async getUser(name, password) {
+      try {
+        let { data: usuarios } = await this.axios.get(this.urlUsers);
+        console.log('AXIOS POST Citas', usuarios);
+        let usuarioBuscado = usuarios.filter(
+          (user) => user.name == name && user.password == password
+        )[0];
+        console.log('usuarioBuscado', usuarioBuscado);
+        if (
+          usuarioBuscado?.name != name ||
+          usuarioBuscado?.password != password
+        ) {
+          this.$swal({
+            icon: 'error',
+            title: 'Usuario o contraseña inexistente',
+            text: 'Por favor, vuelva a intentarlo',
+          });
+        } else {
+          this.$store.dispatch('doLogin', { name, auth: true });
+          this.$router.push({ name: 'Home' });
+        }
+      } catch (error) {
+        console.error('Error en getUser()', error.message);
+      }
+    },
     logIn() {
-      let usuarioLogin = { ...this.formData };
+      const { name, password } = this.formData;
+      this.getUser(name, password);
       this.formData = this.getInicialData();
       this.formState._reset();
-      if (this.usuarioRegistado.usuario != usuarioLogin.usuario) {
-        window.alert('Usuario invalido');
-      } else if (this.usuarioRegistado.password != usuarioLogin.password) {
-        window.alert('Contraseña invalido');
-      } else {
-        this.$store.dispatch('setValueIsLogin', true);
-      }
     },
   },
   computed: {},
