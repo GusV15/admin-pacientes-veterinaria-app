@@ -50,7 +50,7 @@
             Observación: <b>{{ cita.sintomas }}</b>
           </p>
           <!--  <p>atendido: <b>{{ cita.atendido }}</b></p> -->
-          <!-- <button class="btn btn-danger mt-3" @click="deleteHistorial(cita.id)">DELETE</button> -->
+          <button class="btn btn-danger mt-3" @click="deleteHistorial(cita.id)">DELETE</button>
         </div>
       </div>
 
@@ -137,6 +137,25 @@ export default  {
       return nom.toUpperCase();
     }
   },
+
+  async deleteHistorial(id) {
+        console.log('deletePaciente', id)
+
+        if(!confirm('¿Desea eliminar este Historial?'))return; 
+        try {
+          let { data: cita } = await this.axios.delete(this.url+ "/"+ id)
+          console.log('AXIOS DELETE cita', cita)
+
+         
+          let index = this.citas.findIndex(p => p.id == cita.id)
+          if(index == -1) throw new Error('cita no encontrado')
+          this.citas.splice(index, 1)
+ 
+        }
+        catch(error) {
+          console.error('Error en deletecita()', error.message)
+        }
+      },
 
   getClass(estado) {
     return [{ 'alert alert-secondary':estado,'alert alert-success':!estado }, 'text-black', 'p-2', 'rounded'];          

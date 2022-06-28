@@ -2,8 +2,8 @@
   <div class="container">
     <Header />
     <Navbar v-if="$store.state.isLogin"/>
-    <router-view ></router-view>
-
+    <router-view></router-view>
+    
     <!-- <Binding />
       <Estructura />
       <Atributos />
