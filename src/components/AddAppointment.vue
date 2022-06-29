@@ -186,7 +186,9 @@ export default {
   name: 'src-components-add-appointment',
   props: ['citaAEditar'],
   mounted() {
-    this.completarFormulario();
+    if (this.citaAEditar) {
+      this.completarFormulario();
+    }
   },
   data() {
     return {

@@ -1,7 +1,7 @@
 <template lang="html">
   <section class="table-responsive">
     <h2 class="text-center my-2 text-success">Citas Pendientes</h2>
-    <table v-if="citasPendientes.length" class="table table-dark">
+    <table v-if="mostrarCitasPendientes.length" class="table table-dark">
       <tr>
         <th>Nombre de Mascota</th>
         <th>Nombre de Dueño</th>
@@ -10,7 +10,7 @@
         <th>Síntomas</th>
         <th></th>
       </tr>
-      <tr v-for="cita in citasPendientes" :key="cita.id">
+      <tr v-for="cita in mostrarCitasPendientes" :key="cita.id">
         <td>{{ cita.nombre }}</td>
         <td>{{ cita.nombre_duenio }}</td>
         <td>{{ cita.fecha_hora_atencion }}</td>
@@ -30,7 +30,7 @@
       </tr>
     </table>
 
-    <h4 v-else-if="!citasPendientes.length" class="alert alert-info">
+    <h4 v-else-if="!mostrarCitasPendientes.length" class="alert alert-info">
       <span>No hay citas pendientes</span>
     </h4>
   </section>
@@ -42,53 +42,25 @@
     name: 'appointments-view',
     props: [],
     mounted () {
-      this.getCitas();
+      this.obtenerCitas();
     },
     data () {
       return {
-        url: "https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/citas/",
-        citasPendientes: []
-      }
+        url: "https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/citas/"      }
     },
     methods: {
-      async getCitas() {
-        try {
-          let { data: citas } = await this.axios.get(this.url);
-          console.log("AXIOS POST Citas", citas);
-          let citasPendientes = citas.filter(cita => !cita.atendido);
-          this.citasPendientes = citasPendientes;
-        } catch (error) {
-          console.error("Error en getCitas()", error.message);
-        }
-      },
-      async pasarAHistorial(cita) {
-        let citaUpdate = {
+      pasarAHistorial(cita) {
+        let citaAtendida = {
           ...cita,
           atendido: true
         }
-        try {
-        let { data: citaActualizada } = await this.axios.put(this.url+cita.id, citaUpdate, {'content-type' : 'application/json'})
-          console.log("AXIOS PUT Citas", citaActualizada);
-          this.getCitas()
-        } catch (error) {
-          console.error("Error en pasarAHistorial()", error.message);
-        }
+        this.editarCitaPendiente(citaAtendida, cita.id);
       },
       editarCita(cita) {
         this.$router.push({ name: 'addappointment', params: { citaAEditar: cita } });
       },
-      async eliminarCita(id) {
-        try {
-          let { data: cita } = await this.axios.delete(this.url+id)
-          console.log('AXIOS DELETE Cita', cita)
-
-          let index = this.citasPendientes.findIndex(cita => cita.id == id)
-          if(index == -1) throw new Error('Cita no encontrada.')
-          this.citasPendientes.splice(index, 1)
-        }
-        catch(error) {
-          console.error('Error en eliminarCita()', error.message)
-        }
+      eliminarCita(id) {
+        this.eliminarCitaPendiente(id);
         this.$swal({
         icon: 'success',
         title: 'Cita eliminada exitosamente',

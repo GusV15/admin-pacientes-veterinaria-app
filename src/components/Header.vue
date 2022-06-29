@@ -14,7 +14,7 @@
     <div class="divHeader mr-3">
       <div class="d-flex align-items-center">
         <div class="mr-1 text-white">
-          <span>{{ $store.state.username }}</span>
+          <span>{{ mostrarDatosLogin.username }}</span>
         </div>
         <img
           alt="Usuario logo"
@@ -22,12 +22,12 @@
           width="50"
         />
       </div>
-      <div v-if="!$store.state.auth">
+      <div v-if="!mostrarDatosLogin.auth">
         <router-link to="/home" class="login">
           <a class="text-center">Log in</a>
         </router-link>
       </div>
-      <div v-if="$store.state.auth" @click="logOut()">
+      <div v-if="mostrarDatosLogin.auth" @click="desloguearse()">
         <router-link to="/login" class="login">
           <a>Log Out</a>
         </router-link>
@@ -44,19 +44,14 @@ export default {
   data() {
     return {};
   },
-  methods: {
-    logOut() {
-      console.log('logOut');
-      this.$store.dispatch('logOut', { name: null, auth: false });
-    },
-  },
+  methods: {},
   computed: {},
 };
 </script>
 
 <style scoped lang="css">
 .header {
-  background: steelblue;
+  background: #5f9ea0;
   display: flex;
   justify-content: space-between;
   align-items: center;

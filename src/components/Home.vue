@@ -1,6 +1,13 @@
 <template lang="html">
   <section class="">
-    <h1>Home</h1>
+    <h1 class="text-center text-success">
+      Bienvenido al Gestor de Citas para pacientes Caninos!!!
+    </h1>
+    <img
+      class="d-block m-auto"
+      src="../assets/images/banner_veterinaria.jpg"
+      alt="Veterinaria"
+    />
   </section>
 </template>
 

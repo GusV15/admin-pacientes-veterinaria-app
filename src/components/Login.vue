@@ -127,7 +127,7 @@ export default {
             text: 'Por favor, vuelva a intentarlo',
           });
         } else {
-          this.$store.dispatch('logIn', { name, auth: true });
+          this.loguearse(name);
           this.$router.push({ name: 'Home' });
         }
       } catch (error) {

@@ -57,6 +57,15 @@ export const router = new VueRouter({
       props: true,
     },
     {
+      path: '/addpacients/:id',
+      name: 'addpacients',
+      component: AddPacients,
+      meta: {
+        requiresAuth: true,
+      },
+      props: true,
+    },
+    {
       path: '/patientlist',
       meta: {
         requiresAuth: true,

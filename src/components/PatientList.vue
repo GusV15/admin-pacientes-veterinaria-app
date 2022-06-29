@@ -20,7 +20,7 @@
       </form>
       <br />
 
-      <div v-if="pacientes.length" class="table-responsive">
+      <div v-if="this.mostrarPacientes.length" class="table-responsive">
         <table class="table table-dark">
           <tr>
             <th>NOMBRE</th>
@@ -87,12 +87,10 @@ export default {
   name: 'src-components-patient-list',
   props: [],
   mounted() {
-    this.getPacientes();
+    this.obtenerPacientes();
   },
   data() {
     return {
-      url: 'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/pacientes',
-      pacientes: [],
       estado: false,
       formData: this.getInicialData(),
       formDirty: this.getInicialData(),
@@ -100,15 +98,6 @@ export default {
     };
   },
   methods: {
-    async getPacientes() {
-      try {
-        let { data: pacientes } = await this.axios(this.url);
-        console.log('AXIOS GET pacientes', pacientes);
-        this.pacientes = pacientes;
-      } catch (error) {
-        console.error('Error en getPacientes()', error.message);
-      }
-    },
     getClass(estado) {
       return [
         { 'alert alert-secondary': estado, 'alert alert-success': !estado },
@@ -133,32 +122,33 @@ export default {
     },
     mostrarPorNombre(nom) {
       return !nom
-        ? this.pacientes
-        : this.pacientes.filter((p) =>
+        ? this.mostrarPacientes
+        : this.mostrarPacientes.filter((p) =>
             p.nombre.toUpperCase().includes(nom.toUpperCase())
           );
     },
 
     async deletePaciente(id) {
       console.log('deletePaciente', id);
-
-      if (!confirm('¿Desea eliminar este paciente?')) return;
-      try {
-        let { data: paciente } = await this.axios.delete(this.url + '/' + id);
-        console.log('AXIOS DELETE paciente', paciente);
-
-        let index = this.pacientes.findIndex((p) => p.id == paciente.id);
-        if (index == -1) throw new Error('paciente no encontrado');
-        this.pacientes.splice(index, 1);
-      } catch (error) {
-        console.error('Error en deletePaciente()', error.message);
-      }
+      this.$swal({
+        title: 'Eliminando Paciente',
+        text: '¿Está seguro que desea eliminar el paciente?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Si, estoy seguro',
+      }).then((result) => {
+        if (result.value) {
+          this.eliminarPaciente(id);
+          this.obtenerPacientes();
+        }
+      });
     },
     async irAActualizarPaciente(id) {
       console.log(id);
       this.$router.push({
-        path: '/editPatient',
-        name: 'editPatient',
+        path: '/addpacients',
+        name: 'addpacients',
         params: { id: id },
       });
     },
@@ -166,12 +156,12 @@ export default {
 
   computed: {
     calcularHistorialPorNombre() {
-      let cant = this.pacientes.filter((p) =>
+      let cant = this.mostrarPacientes.filter((p) =>
         p.nombre
           .toUpperCase()
           .includes(this.pasarAMayuscula(this.formData.nombre))
       ).length;
-      let total = this.pacientes.length;
+      let total = this.mostrarPacientes.length;
       return {
         ningunoPorNombre: cant == 0,
         existeEnGeneral: total > 0,
