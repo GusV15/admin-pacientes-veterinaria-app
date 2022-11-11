@@ -134,7 +134,7 @@ export default {
         console.error('Error en getUser()', error.message);
       }
     },
-    logIn() {
+    async logIn() {
       const { name, password } = this.formData;
       this.getUser(name, password);
       this.formData = this.getInicialData();
