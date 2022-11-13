@@ -75,7 +75,7 @@
 </template>
 
 <script lang="js">
-
+import { CITAS } from '../endpoints.js'
 export default  {
   name: 'src-components-history-appoiment',
   props: [],
@@ -86,7 +86,7 @@ export default  {
 
   data () {
     return {
-      url:"https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/citas/",
+      urlCitas: CITAS,
       citas:[],
       nombreMinLength:2,
       estado:false,
@@ -102,7 +102,7 @@ export default  {
   
   async getCitas() {
     try {
-      let { data: citas } = await this.axios(this.url)
+      let { data: citas } = await this.axios(this.urlCitas)
       console.log('AXIOS GET citas', citas)
       this.citas = citas
       this.cantHistorial=citas.length
@@ -143,7 +143,7 @@ export default  {
 
         if(!confirm('¿Desea eliminar este Historial?'))return; 
         try {
-          let { data: cita } = await this.axios.delete(this.url+ "/"+ id)
+          let { data: cita } = await this.axios.delete(this.urlCitas + id)
           console.log('AXIOS DELETE cita', cita)
 
          

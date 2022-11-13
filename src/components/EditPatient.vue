@@ -308,7 +308,6 @@ getInicialData(){
   console.log('getInicialData-->',this.id)
   
 return {
-  
   nombre:'',
   especie:'',
   raza:'',

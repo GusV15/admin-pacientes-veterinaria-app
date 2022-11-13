@@ -1,10 +1,10 @@
 <template>
   <section class="src-components-login">
     <div class="jumbotron">
-      <h2>Login</h2>
+      <h2>Crear Cuenta</h2>
       <hr />
 
-      <vue-form :state="formState" @submit.prevent="logIn()">
+      <vue-form :state="formState" @submit.prevent="createAccount()">
         <!-- --------------------- -->
         <!--     Campo usuario     -->
         <!-- --------------------- -->
@@ -35,6 +35,30 @@
               No se permiten espacios intermedios en este campo.
             </div>
           </field-messages>
+        </validate>
+        <br />
+        <!-- --------------------- -->
+        <!--      Campo email      -->
+        <!-- --------------------- -->
+        <validate tag="div">
+            <!-- Elemento de entrada -->
+            <div clase="item"><label for="nombre" > Email: </label>
+            <input 
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            autocomplete="off"
+            v-model.trim="formData.email" 
+            required 
+            />
+        </div>
+            <!-- Mensajes de validación -->
+            <field-messages name="email" show="$dirty">
+            <!-- <div class="alert alert-success mt-1">Success!</div> -->
+            <div slot="required" class="alert alert-danger mt-1">Campo requerido</div>
+            <div slot="email" class="alert alert-danger mt-1">Email no válido</div>
+            </field-messages>
         </validate>
         <br />
         <!-- --------------------- -->
@@ -70,18 +94,15 @@
           </field-messages>
         </validate>
         <br />
-        <!-- Ruta al componente Patients -->
-        <router-link to="/createAccount">
-          <a class="d-inline" href="#">Crear Cuenta</a>
-        </router-link>
+
         <!-- Botón de Login -->
         <button
           class="btn btn-outline-primary my-4"
           style="width: 100%"
           :disabled="formState.$invalid"
-          @click="logIn()"
+          @click="createAccount()"
         >
-          Log in
+          Crear Cuenta
         </button>
       </vue-form>
     </div>
@@ -89,17 +110,17 @@
 </template>
 
 <script>
-import {USUARIOS} from '../endpoints.js'
+import {CREAR_USUARIO} from '../endpoints.js'
 
 export default {
-  name: 'src-components-login',
+  name: 'src-components-create-account',
   props: [],
   mounted() {},
   data() {
     return {
-      urlUsers: USUARIOS,
+      urlCreateAccount: CREAR_USUARIO,
       formState: {},
-      formData: { name: 'gustavo123', password: '12345678' },
+      formData: {},
       nameMinLength: 5,
       nameMaxLength: 15,
       passwordMinLength: 8,
@@ -110,37 +131,32 @@ export default {
     getInicialData() {
       return {
         name: '',
+        email:'',
         password: '',
       };
     },
-    async getUser(name, password) {
+    async addUser(newUser) {
       try {
-        let { data: usuarios } = await this.axios.get(this.urlUsers);
-        console.log('AXIOS POST Citas', usuarios);
-        let usuarioBuscado = usuarios.filter(
-          (user) => user.name == name && user.password == password
-        )[0];
-        console.log('usuarioBuscado', usuarioBuscado);
-        if (
-          usuarioBuscado?.name != name ||
-          usuarioBuscado?.password != password
-        ) {
-          this.$swal({
-            icon: 'error',
-            title: 'Usuario o contraseña inexistente',
-            text: 'Por favor, vuelva a intentarlo',
-          });
-        } else {
-          this.loguearse(name);
-          this.$router.push({ name: 'Home' });
-        }
+        let { data: user } = await this.axios.post(this.urlCreateAccount, newUser, {
+          'content-type': 'application/json',
+        });
+        console.log('AXIOS POST User', user);
       } catch (error) {
-        console.error('Error en getUser()', error.message);
+        console.error('Error en addUser()', error.message);
       }
+      let redirect = this.$router.push({ name: 'Login' });
+      this.$swal({
+        icon: 'success',
+        title: 'Usuario cargado exitosamente',
+        timer: 1000,
+        showConfirmButton: false,
+      }).then(function () {
+        redirect;
+      });
     },
-    async logIn() {
+    async createAccount() {
       const { name, password } = this.formData;
-      this.getUser(name, password);
+      this.addUser({name, password});
       this.formData = this.getInicialData();
       this.formState._reset();
     },

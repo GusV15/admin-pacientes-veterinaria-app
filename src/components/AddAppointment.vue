@@ -182,6 +182,7 @@
 </template>
 
 <script>
+import { CITAS, PACIENTES } from '../endpoints.js'
 export default {
   name: 'src-components-add-appointment',
   props: ['citaAEditar'],
@@ -192,9 +193,9 @@ export default {
   },
   data() {
     return {
-      url: 'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/citas/',
+      urlCitas: CITAS,
       urlPacientes:
-        'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/pacientes/',
+        PACIENTES,
       existePaciente: false,
       formState: {},
       formData: this.getInicialData(),
@@ -235,7 +236,7 @@ export default {
         atendido: false,
       };
       try {
-        let { data: citas } = await this.axios.post(this.url, cita, {
+        let { data: citas } = await this.axios.post(this.urlCitas, cita, {
           'content-type': 'application/json',
         });
         console.log('AXIOS POST Citas', citas);
@@ -261,7 +262,7 @@ export default {
       };
       try {
         let { data: citas } = await this.axios.put(
-          this.url + this.citaAEditar.id,
+          this.urlCitas + this.citaAEditar.id,
           citaEditada,
           {
             'content-type': 'application/json',

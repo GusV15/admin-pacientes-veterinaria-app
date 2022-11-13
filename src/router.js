@@ -9,6 +9,7 @@ import AddPacients from './components/AddPacients/IndexAddPacients.vue';
 import PatientList from './components/PatientList';
 import EditPatient from './components/EditPatient';
 import Login from './components/Login.vue';
+import CreateAccount from './components/CreateAcount.vue';
 import store from './store';
 
 Vue.use(VueRouter);
@@ -89,6 +90,7 @@ export const router = new VueRouter({
       props: true,
     },
     { path: '/login', name: 'Login', component: Login },
+    { path: '/createAccount', name: 'CreateAccount', component: CreateAccount },
     { path: '/*', redirect: '/home' },
     { path: '/', redirect: '/home' },
   ],

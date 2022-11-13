@@ -37,7 +37,7 @@
 </template>
 
 <script lang="js">
-
+  import {CITAS} from '../endpoints.js'
   export default  {
     name: 'appointments-view',
     props: [],
@@ -46,7 +46,8 @@
     },
     data () {
       return {
-        url: "https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/citas/"      }
+        url: CITAS
+      }
     },
     methods: {
       pasarAHistorial(cita) {

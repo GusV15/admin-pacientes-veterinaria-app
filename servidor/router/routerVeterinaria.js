@@ -2,29 +2,34 @@
 import express from 'express';
 
 export class RouterVeterinaria {
-    constructor(){
-        this.router = new express.Router();
-        // this.controlador = new ControllerVeterinaria();
-    }
+  constructor() {
+    this.router = new express.Router();
+    // this.controlador = new ControllerVeterinaria();
+  }
 
-    init(){
+  init() {
+    // GET
+    this.router.get('/getAnimal/:id'),
+      (req, res) => res.json({ messege: 'Responde con un animales por ID' });
 
-        // GET 
-        
-        this.router.get('/getAnimal/:id'), (req, res) => res.json( { "messege": "Responde con un animales por ID"}); 
+    this.router.get('/getAnimales'),
+      (req, res) => res.json({ messege: 'Responde con Todos los animales' });
 
-        this.router.get('/getAnimales'), (req, res) => res.json( { "messege": "Responde con Todos los animales"}); 
-        
-        // POST
-        this.router.post('/addAnimal', (req, res) => res.json( {"message": "Deberia cargar animal"}));
+    // POST
+    this.router.post('/addAnimal', (req, res) =>
+      res.json({ message: 'Deberia cargar animal' })
+    );
 
-        // PUT 
-        this.router.put('/modificarAnimal/:id', (req, res) => res.json( {"message": "Deberia modificar los valores de un animal"}));
-        
-        // DELETE
-        this.router.delete('/eliminarAnimal/:id', (req, res) => res.json( {"message": "Deberia eliminar de un animal"}));
-        
+    // PUT
+    this.router.put('/modificarAnimal/:id', (req, res) =>
+      res.json({ message: 'Deberia modificar los valores de un animal' })
+    );
 
-        return this.router;
-    }
+    // DELETE
+    this.router.delete('/eliminarAnimal/:id', (req, res) =>
+      res.json({ message: 'Deberia eliminar de un animal' })
+    );
+
+    return this.router;
+  }
 }
