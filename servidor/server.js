@@ -1,7 +1,7 @@
 import express from 'express';
 import config from './config.js';
 import cors from 'cors';
-import { RouterVeterinaria } from './router/routerVeterinaria.js';
+import { RouterPatient } from './router/routerPatient.js';
 import { RouterAuth } from './router/routerAuth.js';
 import { RouterAppointment } from './router/routerAppointment.js';
 // import { CnxMongoDB } from './model/mongoConnect.js'
@@ -22,7 +22,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 app.get('/', (req, res) =>
   res.send('================ EL SERVIDOR A SIDO INICIADO ================')
 );
-app.use(config.BASE_ROUTER, new RouterVeterinaria().init());
+app.use(config.BASE_ROUTER, new RouterPatient().init());
 app.use(config.BASE_ROUTER, new RouterAuth().init());
 app.use(config.BASE_ROUTER, new RouterAppointment().init());
 

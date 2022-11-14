@@ -271,7 +271,7 @@
 </template>
 
 <script >
-
+  import { PACIENTES } from '../endpoints.js'
   export default  {
     name: 'src-components-edit-patient',
     props: ['id'],
@@ -287,7 +287,7 @@
       nombreMinLength : 3,
       edadMin: 1,
       edadMax: 30,
-      url: 'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/pacientes',
+      url: PACIENTES,
       pacientes:[],
 
       }
