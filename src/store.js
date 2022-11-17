@@ -135,7 +135,9 @@ export default new Vuex.Store({
       state.pacientes.push(pacienteNuevo);
     },
     modificarPaciente(state, paciente) {
+
       let index = state.pacientes.findIndex((user) => user.id == paciente.id);
+      console.log('aca entro', index, state.pacientes)
       if (index == -1) throw new Error('paciente no encontrado');
       state.pacientes.splice(index, 1, paciente);
     },
