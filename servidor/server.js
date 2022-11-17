@@ -5,7 +5,7 @@ import { RouterPatient } from './router/routerPatient.js';
 import { RouterAuth } from './router/routerAuth.js';
 import { RouterAppointment } from './router/routerAppointment.js';
 import { RouterMail } from './router/routerMail.js'
-// import { CnxMongoDB } from './model/mongoConnect.js'
+import  CnxMongoDB  from './model/DB.js'
 
 // INICIALIZAR APP
 const app = new express();
@@ -38,5 +38,4 @@ server.on('error', (e) =>
 );
 
 // INICIO DE BASE DE DATOS
-
-// if(config.MODO_PERSISTENCIA === 'MONGO' ) await CnxMongoDB.conectar();
+ if(config.MODO_PERSISTENCIA === 'MONGO' ) await CnxMongoDB.conectar();
