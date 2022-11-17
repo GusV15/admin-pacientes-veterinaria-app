@@ -23,7 +23,7 @@
           <button class="btn btn-secondary mr-1" @click="editarCita(cita)">
             Editar
           </button>
-          <button class="btn btn-danger" @click="eliminarCita(cita.id)">
+          <button class="btn btn-danger" @click="eliminarCita(cita)">
             Eliminar
           </button>
         </td>
@@ -37,7 +37,7 @@
 </template>
 
 <script lang="js">
-  import {CITAS} from '../endpoints.js'
+  import { CITAS } from '../endpoints.js'
   export default  {
     name: 'appointments-view',
     props: [],
@@ -60,7 +60,18 @@
       editarCita(cita) {
         this.$router.push({ name: 'addappointment', params: { citaAEditar: cita } });
       },
-      eliminarCita(id) {
+      async eliminarCita(cita) {
+        const { id } = cita;
+
+        // AVISO AL USUARIO QUE SE DIO DE BAJA LA CITA
+        await fetch('http://localhost:3000/api/v1/deleteAppointment',{
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(cita),
+        })
+
         this.eliminarCitaPendiente(id);
         this.$swal({
         icon: 'success',

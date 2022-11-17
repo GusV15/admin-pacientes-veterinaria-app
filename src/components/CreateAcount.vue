@@ -141,6 +141,16 @@ export default {
           'content-type': 'application/json',
         });
         console.log('AXIOS POST User', user);
+
+        // AVISO AL USUARIO QUE SE DIO DE ALTA EL USUARIO
+        await fetch('http://localhost:3000/api/v1/newUser',{
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(newUser),
+        })
+
       } catch (error) {
         console.error('Error en addUser()', error.message);
       }
@@ -155,8 +165,8 @@ export default {
       });
     },
     async createAccount() {
-      const { name, password } = this.formData;
-      this.addUser({name, password});
+      const { name, password, email } = this.formData;
+      this.addUser({name, password, email});
       this.formData = this.getInicialData();
       this.formState._reset();
     },

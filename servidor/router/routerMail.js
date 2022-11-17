@@ -8,15 +8,12 @@ export class RouterMail {
   }
 
   init() {
-    // GET
-    
-    this.router.get('/sendEmail', this.controller.getMail);
 
     //POST
-
-    //PUT
-
-    //DELETE
+    this.router.post('/newUser', this.controller.insertUser);
+    this.router.post('/newAppointment', this.controller.insertAppointment);
+    this.router.post('/deleteAppointment', this.controller.deleteAppointment);
+    this.router.post('/newPatient', this.controller.insertPatient);
 
     return this.router;
   }
