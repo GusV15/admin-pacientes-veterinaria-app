@@ -236,8 +236,6 @@ export default {
         atendido: false,
       };
 
-      console.log(this.formData);
-
       // AVISO AL USUARIO QUE SE DIO DE ALTA EL USUARIO
        await fetch('http://localhost:3000/api/v1/newAppointment',{
           method: "POST",
@@ -305,7 +303,6 @@ export default {
             ? pacientes.find((paciente) => paciente.nombre == nombre)
             : {};
         this.existePaciente = pacienteBuscado ? true : false;
-        console.log('pacientes', pacienteBuscado);
         if (this.existePaciente) {
           this.formData = {
             ...this.formData,

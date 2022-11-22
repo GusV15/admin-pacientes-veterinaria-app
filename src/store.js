@@ -2,7 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import axios from 'axios';
 
-import { CITAS, PACIENTES } from './endpoints';
+import { CITAS, PACIENTES, ANIMAL_GIFS } from './endpoints';
 
 Vue.use(Vuex);
 
@@ -12,6 +12,7 @@ export default new Vuex.Store({
     auth: false,
     pacientes: [],
     citasPendientes: [],
+    gifAnimales: [],
   },
   actions: {
     // Auth
@@ -98,6 +99,15 @@ export default new Vuex.Store({
         console.error('Error en deletePaciente()', error.message);
       }
     },
+    async getAnimalGifs({ commit }) {
+      try {
+        let { data: animalGifs } = await axios(ANIMAL_GIFS);
+        commit('guardarGifsAnimales', animalGifs);
+        console.log('AXIOS GET animal gifs', animalGifs);
+      } catch (error) {
+        console.error('Error en getAnimalGifs()', error.message);
+      }
+    },
   },
   mutations: {
     // Auth
@@ -135,9 +145,7 @@ export default new Vuex.Store({
       state.pacientes.push(pacienteNuevo);
     },
     modificarPaciente(state, paciente) {
-
       let index = state.pacientes.findIndex((user) => user.id == paciente.id);
-      console.log('aca entro', index, state.pacientes)
       if (index == -1) throw new Error('paciente no encontrado');
       state.pacientes.splice(index, 1, paciente);
     },
@@ -145,6 +153,9 @@ export default new Vuex.Store({
       let index = state.pacientes.findIndex((p) => p.id == paciente.id);
       if (index == -1) throw new Error('paciente no encontrado');
       state.pacientes.splice(index, 1);
+    },
+    guardarGifsAnimales(state, gifAnimales) {
+      state.gifAnimales = gifAnimales;
     },
   },
 });
