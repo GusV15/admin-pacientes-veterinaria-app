@@ -38,6 +38,9 @@ const miMixinGlobal = {
     eliminarPaciente(id) {
       this.$store.dispatch('eliminarPaciente', id);
     },
+    getAnimalGifs() {
+      this.$store.dispatch('getAnimalGifs');
+    },
   },
   computed: {
     mostrarDatosLogin() {
@@ -51,6 +54,9 @@ const miMixinGlobal = {
     },
     mostrarPacientes() {
       return this.$store.state.pacientes;
+    },
+    mostrarGifsDeAnimales() {
+      return this.$store.state.gifAnimales;
     },
   },
 };

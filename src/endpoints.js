@@ -7,5 +7,6 @@ const CITAS = 'http://localhost:3000/api/v1/appointments/';
 const PACIENTES = 'http://localhost:3000/api/v1/patients/';
 /* const USUARIOS =
   'https://62b25de3c7e53744afcb7292.mockapi.io/admin-vet/usuarios/'; */
+const ANIMAL_GIFS = 'http://localhost:3000/api/v1/animalGifs';
 
-export { CITAS, PACIENTES, USUARIOS, CREAR_USUARIO };
+export { CITAS, PACIENTES, USUARIOS, CREAR_USUARIO, ANIMAL_GIFS };
