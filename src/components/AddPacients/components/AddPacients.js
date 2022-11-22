@@ -31,14 +31,15 @@ export default {
         id: '',
       };
     },
-    agregarPacienteNuevo() {
+    async agregarPacienteNuevo() {
       let pacienteNuevo = { ...this.formData };
       if (
         this.mostrarPacientes.find(
           (paciente) =>
             paciente.nombre.toUpperCase() == pacienteNuevo.nombre.toUpperCase()
         )
-      ) {
+      ) 
+      {
         this.$swal({
           icon: 'error',
           title: `Paciente: ${pacienteNuevo.nombre} ya existe.`,
@@ -51,6 +52,16 @@ export default {
           title: 'Paciente agregado exitosamente',
         });
       }
+
+      // AVISO AL USUARIO QUE SE DIO DE ALTA A UN NUEVO PACIENTE
+      await fetch('http://localhost:3000/api/v1/newPatient',{
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(pacienteNuevo),
+      })
+
       this.formData = this.getInicialData();
       this.formState._reset();
       document.querySelector('#macho').checked = true;

@@ -4,6 +4,7 @@ import cors from 'cors';
 import { RouterPatient } from './router/routerPatient.js';
 import { RouterAuth } from './router/routerAuth.js';
 import { RouterAppointment } from './router/routerAppointment.js';
+import { RouterMail } from './router/routerMail.js'
 import  CnxMongoDB  from './model/DB.js'
 
 // INICIALIZAR APP
@@ -25,6 +26,7 @@ app.get('/', (req, res) =>
 app.use(config.BASE_ROUTER, new RouterPatient().init());
 app.use(config.BASE_ROUTER, new RouterAuth().init());
 app.use(config.BASE_ROUTER, new RouterAppointment().init());
+app.use(config.BASE_ROUTER, new RouterMail().init() );
 
 // SERVIDOR
 const server = app.listen(config.PORT, () => {

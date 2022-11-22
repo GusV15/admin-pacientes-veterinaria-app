@@ -235,6 +235,18 @@ export default {
         sintomas,
         atendido: false,
       };
+
+      console.log(this.formData);
+
+      // AVISO AL USUARIO QUE SE DIO DE ALTA EL USUARIO
+       await fetch('http://localhost:3000/api/v1/newAppointment',{
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(this.formData),
+        })
+
       try {
         let { data: citas } = await this.axios.post(this.urlCitas, cita, {
           'content-type': 'application/json',
