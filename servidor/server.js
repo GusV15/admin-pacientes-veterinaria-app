@@ -4,8 +4,9 @@ import cors from 'cors';
 import { RouterPatient } from './router/routerPatient.js';
 import { RouterAuth } from './router/routerAuth.js';
 import { RouterAppointment } from './router/routerAppointment.js';
-import { RouterMail } from './router/routerMail.js'
-import  CnxMongoDB  from './model/DB.js'
+import { RouterMail } from './router/routerMail.js';
+import CnxMongoDB from './model/DB.js';
+import { RouterAnimalGifs } from './router/routerAnimalGifs.js';
 
 // INICIALIZAR APP
 const app = new express();
@@ -25,8 +26,9 @@ app.get('/', (req, res) =>
 );
 app.use(config.BASE_ROUTER, new RouterPatient().init());
 app.use(config.BASE_ROUTER, new RouterAuth().init());
+app.use(config.BASE_ROUTER, new RouterAnimalGifs().init());
 app.use(config.BASE_ROUTER, new RouterAppointment().init());
-app.use(config.BASE_ROUTER, new RouterMail().init() );
+app.use(config.BASE_ROUTER, new RouterMail().init());
 
 // SERVIDOR
 const server = app.listen(config.PORT, () => {
@@ -38,4 +40,4 @@ server.on('error', (e) =>
 );
 
 // INICIO DE BASE DE DATOS
- if(config.MODO_PERSISTENCIA === 'MONGO' ) await CnxMongoDB.conectar();
+if (config.MODO_PERSISTENCIA === 'MONGO') await CnxMongoDB.conectar();
