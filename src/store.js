@@ -11,7 +11,7 @@ export default new Vuex.Store({
     username: null,
     auth: false,
     pacientes: [],
-    citasPendientes: [],
+    citas: [],
     gifAnimales: [],
   },
   actions: {
@@ -27,13 +27,12 @@ export default new Vuex.Store({
       try {
         let { data: citas } = await axios(CITAS);
         console.log('AXIOS GET Citas', citas);
-        let citasPendientes = citas.filter((cita) => !cita.atendido);
-        commit('guardarCitasPendientes', citasPendientes);
+        commit('guardarCitas', citas);
       } catch (error) {
         console.error('Error en getCitas()', error.message);
       }
     },
-    async editarCitaPendiente({ commit }, { citaAtendida, id }) {
+    async editarCita({ commit }, { citaAtendida, id }) {
       try {
         let { data: citaActualizada } = await axios.put(
           CITAS + id,
@@ -41,8 +40,7 @@ export default new Vuex.Store({
           { 'content-type': 'application/json' }
         );
         console.log('AXIOS PUT Citas', citaActualizada);
-        commit('guardarCitaEditada', citaActualizada);
-        this.obtenerCitas();
+        commit('guardarCitaEditada', citaAtendida);
       } catch (error) {
         console.error('Error en pasarAHistorial()', error.message);
       }
@@ -85,15 +83,20 @@ export default new Vuex.Store({
           { 'content-type': 'application/json' }
         );
         console.log('AXIOS PUT paciente', paciente);
-        commit('modificarPaciente', paciente);
+        commit('modificarPaciente', {
+          ...payload.pacienteEditado,
+          id: payload.id,
+        });
       } catch (error) {
         console.error('Error en editarPaciente()', error.message);
       }
     },
-    async eliminarPaciente({ commit }, id) {
+    async eliminarPaciente({ commit }, paciente) {
       try {
-        let { data: paciente } = await axios.delete(PACIENTES + id);
-        console.log('AXIOS DELETE paciente', paciente);
+        let { data: pacienteResponse } = await axios.delete(
+          PACIENTES + paciente.id
+        );
+        console.log('AXIOS DELETE paciente', pacienteResponse);
         commit('eliminarPaciente', paciente);
       } catch (error) {
         console.error('Error en deletePaciente()', error.message);
@@ -120,20 +123,20 @@ export default new Vuex.Store({
       state.username = name;
     },
     // Citas
-    guardarCitasPendientes(state, citasPendientes) {
-      state.citasPendientes = citasPendientes;
+    guardarCitas(state, citas) {
+      state.citas = citas;
     },
     guardarCitaEditada(state, citaActualizada) {
-      let index = state.citasPendientes.findIndex(
+      let index = state.citas.findIndex(
         (cita) => cita.id == citaActualizada.id
       );
       if (index == -1) throw new Error('Cita no encontrada.');
-      state.citasPendientes.splice(index, 1, citaActualizada);
+      state.citas.splice(index, 1, citaActualizada);
     },
     eliminarCitaPendiente(state, id) {
-      let index = state.citasPendientes.findIndex((cita) => cita.id == id);
+      let index = state.citas.findIndex((cita) => cita.id == id);
       if (index == -1) throw new Error('Cita no encontrada.');
-      state.citasPendientes.splice(index, 1);
+      state.citas.splice(index, 1);
     },
     // Pacientes
     guardarPacientes(state, pacientes) {

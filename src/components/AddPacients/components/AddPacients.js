@@ -1,12 +1,13 @@
 export default {
   name: 'src-components-patients',
-  props: ['id'],
+  props: ['pacienteAEditar'],
   mounted() {
     document.querySelector('#macho').checked = true;
     this.obtenerPacientes();
-    this.devolverPaciente(this.id);
-
-    this.id && (this.formData = this.getInicialData());
+    console.log(this.pacienteAEditar);
+    if (this.pacienteAEditar) {
+      this.completarFormulario();
+    }
   },
   data() {
     return {
@@ -38,8 +39,7 @@ export default {
           (paciente) =>
             paciente.nombre.toUpperCase() == pacienteNuevo.nombre.toUpperCase()
         )
-      ) 
-      {
+      ) {
         this.$swal({
           icon: 'error',
           title: `Paciente: ${pacienteNuevo.nombre} ya existe.`,
@@ -54,13 +54,13 @@ export default {
       }
 
       // AVISO AL USUARIO QUE SE DIO DE ALTA A UN NUEVO PACIENTE
-      await fetch('http://localhost:3000/api/v1/newPatient',{
-        method: "POST",
+      await fetch('http://localhost:3000/api/v1/newPatient', {
+        method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(pacienteNuevo),
-      })
+      });
 
       this.formData = this.getInicialData();
       this.formState._reset();
@@ -75,8 +75,9 @@ export default {
         nombre_duenio: this.formData.nombre_duenio,
         direccion: this.formData.direccion,
         email: this.formData.email,
+        edad: this.formData.edad,
       };
-      this.editarPaciente(pacienteUpdate, this.id);
+      this.editarPaciente(pacienteUpdate, this.pacienteAEditar.id);
       this.$swal({
         icon: 'success',
         title: 'Paciente editado exitosamente',
@@ -85,11 +86,33 @@ export default {
       this.formState._reset();
       this.$router.back();
     },
-    devolverPaciente(id) {
-      console.log('devolverPaciente-->', this.id);
-      let unPaciente = this.mostrarPacientes.filter((p) => p.id == id);
-      this.formData = { ...unPaciente[0] };
-      console.log('formData-->', this.formData);
+    completarFormulario() {
+      if (this.pacienteAEditar) {
+        console.log(this.pacienteAEditar);
+        const {
+          id,
+          nombre,
+          nombre_duenio,
+          especie,
+          raza,
+          sexo,
+          edad,
+          direccion,
+          email,
+        } = this.pacienteAEditar;
+        let paciente = {
+          nombre,
+          nombre_duenio,
+          especie,
+          raza,
+          edad,
+          sexo,
+          direccion,
+          email,
+          id,
+        };
+        this.formData = paciente;
+      }
     },
   },
   computed: {

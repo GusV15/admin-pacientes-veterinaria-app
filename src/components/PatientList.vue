@@ -28,7 +28,7 @@
             <th>RAZA</th>
             <th>EDAD</th>
             <th>SEXO</th>
-            <th>HUMANO</th>
+            <th>DUEÑO</th>
             <th>DIRECCION</th>
             <th>EMAIL</th>
             <th class="columnaFija">ACCION</th>
@@ -48,13 +48,13 @@
             <td>{{ paciente.email }}</td>
             <td class="columnaFija">
               <button
-                class="btn btn-danger"
-                @click="deletePaciente(paciente.id)"
+                class="btn btn-danger px-2"
+                @click="deletePaciente(paciente)"
               >
-                X</button
+                Eliminar</button
               ><button
-                class="btn btn-warning ml-2"
-                @click="irAActualizarPaciente(paciente.id)"
+                class="btn btn-warning ml-2 px-2"
+                @click="irAActualizarPaciente(paciente)"
               >
                 Editar
               </button>
@@ -128,8 +128,8 @@ export default {
           );
     },
 
-    async deletePaciente(id) {
-      console.log('deletePaciente', id);
+    async deletePaciente(paciente) {
+      console.log('deletePaciente', paciente);
       this.$swal({
         title: 'Eliminando Paciente',
         text: '¿Está seguro que desea eliminar el paciente?',
@@ -139,17 +139,15 @@ export default {
         confirmButtonText: 'Si, estoy seguro',
       }).then((result) => {
         if (result.value) {
-          this.eliminarPaciente(id);
+          this.eliminarPaciente(paciente);
           this.obtenerPacientes();
         }
       });
     },
-    async irAActualizarPaciente(id) {
-      console.log(id);
+    async irAActualizarPaciente(paciente) {
       this.$router.push({
-        path: '/addpacients',
         name: 'addpacients',
-        params: { id: id },
+        params: { pacienteAEditar: paciente },
       });
     },
   },

@@ -8,7 +8,7 @@
         <th>Fecha atención</th>
         <th>Email</th>
         <th>Síntomas</th>
-        <th></th>
+        <th>Acciones</th>
       </tr>
       <tr v-for="cita in mostrarCitasPendientes" :key="cita.id">
         <td>{{ cita.nombre }}</td>

@@ -1,7 +1,7 @@
 
 <section class="src-components-add-pacients">
   <div class="jumbotron">
-    <h2 v-if="this.id!=null">{{ "Editar  Paciente " | pasarAMayuscula }}</h2>
+    <h2 v-if="this.pacienteAEditar!=null">{{ "Editar  Paciente " | pasarAMayuscula }}</h2>
     <h2 v-else>{{ "Agregar  Paciente " | pasarAMayuscula }}</h2>
     <p><pre>{{saludar()}}</pre></p> 
     <hr />
@@ -169,7 +169,7 @@
       <!-- --------------------- -->
       <validate tag="div">
         <!-- Elemento de entrada -->
-          <div clase="item"><label for="nombre"> Humano: </label>
+          <div clase="item"><label for="nombre"> Dueño: </label>
         <input 
          style="width : 450px
         heigth = 50px"
@@ -262,7 +262,7 @@
 
       <!-- Botón de envío -->
       <!-- Botón de envío -->
-      <div v-if="this.id!=null"> <button type='submit' class="btn btn-primary my-4" :disabled="formState.$invalid" @click.prevent="actualizarPaciente()">Editar</button></div>
+      <div v-if="this.pacienteAEditar!=null"> <button type='submit' class="btn btn-primary my-4" :disabled="formState.$invalid" @click.prevent="actualizarPaciente()">Editar</button></div>
       <div v-else> <button type='submit' class="btn btn-success my-4" :disabled="formState.$invalid" @click.prevent="agregarPacienteNuevo()">Agregar</button></div>
     </vue-form>      
 

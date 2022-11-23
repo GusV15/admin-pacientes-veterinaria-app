@@ -38,7 +38,7 @@
             Mascota: <b>{{ cita.nombre }}</b>
           </p>
           <p>
-           Nombre de Humano: <b>{{ cita.nombre_duenio }}</b>
+           Nombre de Dueño: <b>{{ cita.nombre_duenio }}</b>
           </p>
           <p>
             Dia de atención: <b>{{ cita.fecha_hora_atencion }}</b>
@@ -81,13 +81,13 @@ export default  {
   props: [],
   
   mounted () {
-  this.getCitas()
+  this.obtenerCitas()
   },
 
   data () {
     return {
       urlCitas: CITAS,
-      citas:[],
+      citas: this.mostrarCitasAtendidas,
       nombreMinLength:2,
       estado:false,
       formData : this.getInicialData(),
@@ -99,24 +99,11 @@ export default  {
   convertirFyh(fyh) {
     return new Date(fyh).toLocaleString()
   },
-  
-  async getCitas() {
-    try {
-      let { data: citas } = await this.axios(this.urlCitas)
-      console.log('AXIOS GET citas', citas)
-      this.citas = citas
-      this.cantHistorial=citas.length
-      this.$emit('cantHistorial',this.cantHistorial);
-    }
-    catch(error) {
-      console.error('Error en getCitas()', error.message);
-    }
-  },
 
   mostrarAtendidos(nom){
     return !nom ?
-    this.citas.filter(cita => cita.atendido)
-    :this.citas.filter(cita => cita.atendido && cita.nombre.toUpperCase().includes(nom.toUpperCase()));
+    this.mostrarCitasAtendidas
+    :this.mostrarCitasAtendidas.filter(cita => cita.nombre.toUpperCase().includes(nom.toUpperCase()));
   },
 
   obtenerCantidadAtendidos(){
@@ -143,14 +130,7 @@ export default  {
 
         if(!confirm('¿Desea eliminar este Historial?'))return; 
         try {
-          let { data: cita } = await this.axios.delete(this.urlCitas + id)
-          console.log('AXIOS DELETE cita', cita)
-
-         
-          let index = this.citas.findIndex(p => p.id == cita.id)
-          if(index == -1) throw new Error('cita no encontrado')
-          this.citas.splice(index, 1)
- 
+          this.eliminarCitaPendiente(id);
         }
         catch(error) {
           console.error('Error en deletecita()', error.message)
@@ -164,8 +144,8 @@ export default  {
 },
 computed: {
   calcularHistorialPorNombre() {
-    let cant = this.citas.filter(cita => cita.atendido && (cita.nombre.toUpperCase().includes(this.pasarAMayuscula(this.formData.nombre)))).length;
-    let total = this.citas.filter(cita => cita.atendido).length;
+    let cant = this.mostrarCitasAtendidas.filter(cita => (cita.nombre.toUpperCase().includes(this.pasarAMayuscula(this.formData.nombre)))).length;
+    let total = this.mostrarCitasAtendidas.length;
     return {
             ningunoPorNombre : cant == 0,
             existeEnGeneral: total > 0,

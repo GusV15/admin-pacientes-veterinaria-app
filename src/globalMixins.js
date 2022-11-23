@@ -17,7 +17,7 @@ const miMixinGlobal = {
       this.$store.dispatch('getCitas');
     },
     editarCitaPendiente(citaAtendida, id) {
-      this.$store.dispatch('editarCitaPendiente', {
+      this.$store.dispatch('editarCita', {
         citaAtendida,
         id,
       });
@@ -35,8 +35,8 @@ const miMixinGlobal = {
     editarPaciente(pacienteEditado, id) {
       this.$store.dispatch('editarPaciente', { pacienteEditado, id });
     },
-    eliminarPaciente(id) {
-      this.$store.dispatch('eliminarPaciente', id);
+    eliminarPaciente(paciente) {
+      this.$store.dispatch('eliminarPaciente', paciente);
     },
     getAnimalGifs() {
       this.$store.dispatch('getAnimalGifs');
@@ -50,7 +50,10 @@ const miMixinGlobal = {
       };
     },
     mostrarCitasPendientes() {
-      return this.$store.state.citasPendientes;
+      return this.$store.state.citas.filter((cita) => !cita.atendido);
+    },
+    mostrarCitasAtendidas() {
+      return this.$store.state.citas.filter((cita) => cita.atendido);
     },
     mostrarPacientes() {
       return this.$store.state.pacientes;
